@@ -32,6 +32,7 @@ module type Bot = sig
   type t
 end
 
+(* Makes a bullet associated with a particular bot *)
 module type MakeBullet = 
   functor (B : Bot) -> Bullet with type bot = B.t
 
