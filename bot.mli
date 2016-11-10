@@ -33,3 +33,5 @@ end
 
 module type MakeBot =
   functor (A : AI) -> Bot
+
+module MakeBot : MakeBot

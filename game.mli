@@ -1,11 +1,13 @@
-open Bot
-open Bullet
+module Bullet : Bullet
+module Bot : Bot
 
+val step : t -> t
 
-type t = {
-	bullets : Bullet1.t
-}
+val getBullets : t -> Bullet.t list
 
-(*val step : t -> t*)
+val getBots : t -> Bot.t list
 
+val getWidth : t -> int
+val getHeight : t -> int
 
+val getScore : t -> int
