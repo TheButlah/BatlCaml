@@ -8,8 +8,6 @@ module type Bot = sig
   (* The t:ype of a bot *)
   type t
 
-  module TheAI : AI
-
   (* Gets the Position of the bot 
    * returns A 2D Tuple of the position in x,y *)
   val getPosition : t -> float * float

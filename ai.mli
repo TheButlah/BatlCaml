@@ -1,4 +1,3 @@
-module type AI = sig
-  type t
-  val step : t -> t
-end
+type t
+val step : t -> t
+
