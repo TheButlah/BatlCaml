@@ -34,3 +34,5 @@ end
 
 module type MakeBullet = 
   functor (B : Bot) -> Bullet with type bot = B.t
+
+module MakeBullet : MakeBullet

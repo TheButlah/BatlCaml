@@ -56,7 +56,7 @@ module MakeBullet (B : Bot) = struct
   let getSpeed t =
     failwith "Unimplemented"
 
-  let getOwnder t =
+  let getOwner t =
     failwith "Unimplemented"
 
   let make (xPos,yPos) (xVel,yVel) bot =
