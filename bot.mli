@@ -1,3 +1,4 @@
+(* Represents all the code needed in the AI of this bot *)
 module type AI = sig
   type t
   val step : t -> t
@@ -5,7 +6,7 @@ end
 
 module type Bot = sig
 
-  (* The t:ype of a bot *)
+  (* The type of a bot *)
   type t
 
   (* Gets the Position of the bot 
@@ -30,7 +31,7 @@ module type Bot = sig
   val step : t -> t
 end
 
-
+(* Makes a bot with the given AI *)
 module type MakeBot =
   functor (A : AI) -> Bot
 
