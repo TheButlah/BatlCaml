@@ -1,9 +1,11 @@
 open Bot
-
-type t
-
+open Bullet
 
 
-val step : t -> t
+type t = {
+	bullets : Bullet1.t
+}
+
+(*val step : t -> t*)
 
 
