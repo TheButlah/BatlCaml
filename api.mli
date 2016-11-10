@@ -1,29 +1,38 @@
 (* type of datastructure maintained by the api *)
 type t
 
+type self
+
+type enemy
+
 (* rotates the bot left *)
-val turnLeft : t -> t
+val turnLeft : float -> t -> t
 
 (* rotates the bot right *)
-val turnRight : t -> t
+val turnRight : float -> t -> t
 
-(* moves some number of units in the x direction *)
-val moveX : int -> t -> t
-
-(* moves some number of units in the y direction *)
-val moveY : int -> t -> t
+(* sets speed *)
+val setSpeed : float -> t -> t
 
 (* shoots a bullet *)
 val shoot : t -> t
 
-(* returns health of bot *)
-val getHealth : t -> float
+(* returns health of self *)
+val getHealth : self -> float
 
-(* returns enemy x position *)
-val otherX : t -> int
+val getPos : self -> (float * float)
 
-(* returns enemy y position *)
-val otherY : t -> int
+val getDirection : self -> (float * float)
+
+val getSpeed : self -> float
+
+(* get the (length,width) of room *)
+val getRoomSize : t -> (int * int)
+
+(* returns enemy position *)
+val enemyPosition : enemy -> (float * float)
+
+val enemyVelocity : enemy -> (float * float)
 
 (* returns enemy health *)
-val otherHealth : t -> float
+val enemyHealth : enemy -> float
