@@ -1,0 +1,73 @@
+3110 Design Review Notes:
+
+- Goal: OCaml version of RoboCode — provides api for user to write code to control ai of robots in simulation
+
+- Game state in model component of design
+	- game, bot, bullet
+
+- Game.ml
+	- lots of things to make sure get updated correctly on each step — one mistake could mess up whole simulation
+
+-Bot.ml
+	- looks good
+
+- usually use records as data structure to track state of objects/modules
+
+- go over data structures before start programming
+
+- api file:
+	- used by coder to write own OCaml file to be used as an api
+	- coders would include code and would recompile to run
+	- ai takes in a bot and modifies it?
+	- opened inside an ai
+
+- add way to control two different bots and:
+	- two variables both of type bot i.e.:
+	- each bot depends on an ai and that affects their behavior
+
+- takes in two different ai modules and creates bots based on them
+
+- use functors to make bots
+
+- api takes data type in the bot module that represents state
+	- game module referencing api?
+	- users don’t need to use it
+
+- user should only modify the ai file
+	- everything dependent on that
+
+- make sure everyone is on the same page for all of implementation
+	- let everyone know when push something to avoid merge conflicts
+
+- make sure decide data structures before implementation
+
+- Main file is helper function to find user code and recompile it into a simulation
+	- sort of like a user-friendly make file
+	- figure out specifics of this before start implementing
+
+- ai is logic of a bot
+	- needs to be part of game because needs access to both bots
+
+- if want more than two bots would need list of bots in the game file
+	*- list of modules
+	- imperative features
+	- arrays
+	- association list (bot*ai)
+
+- records for bot state
+
+- experiment with implementations and how to store things
+	- list of functions
+	- list of modules
+
+- start with set number of bots then move on to try and incorporate multiple bots
+
+- api need to be inside game to get enemy robot info
+
+- don’t need values at the time of execution in api?
+	- trickier
+	- might use imperative features
+
+- timeline for when each part should be done by to allow time for testing
+
+- write tests for each others parts
