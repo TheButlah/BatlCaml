@@ -4,13 +4,14 @@ module BotHandler = struct
   let pi = 3.14159265358979312
 
   let toRad (deg : float) = 
-    ((deg mod 360.)/.360.) *. 2. *. pi
+    ((mod_float deg 360.)/.360.) *. 2. *. pi
 
   let toDeg (rad : float) = 
-    ((rad mod (2. *. pi))/.(2. *. pi)) *. 360.
+    ((mod_float rad (2. *. pi))/.(2. *. pi)) *. 360.
 
   (* type of command returned by ai step function *)
   type command = 
+    | NoCmd
     | Shoot 
     | Forward of float
     | LT of float
@@ -27,6 +28,7 @@ module BotHandler = struct
     mutable yDir : float;
     mutable power : float;
     mutable others : data list; (* each bot has info about every other bot *)
+    speed : float;
   }
   and 
   (* Single element in [bots] *)
@@ -48,13 +50,13 @@ module BotHandler = struct
   type bullets = bullet list ref 
 
   (* static datastructure holding all bots and their step functions and handles *)
-  let bots =  ref []
+  let bots = ref []
 
   (* static datastructure holding all bullets their and handles *)
-  let bullets =  ref []
+  let bullets = ref []
 
   (* room size *)
-  let roomSize = ref (0 * 0)
+  let roomSize = ref (0, 0)
 
   (* sets the room size *)
   let setRoomSize x y = 
@@ -106,9 +108,9 @@ module BotHandler = struct
 
   (* Moves the bot forward *)
   let moveForward handle amt = 
-    let bot = searchHandles handle !bots in
-    bot.xPos <- (bot.xDir *. amt) + bot.xPos;
-    (* UNCOMPLETED *)
+    let bot = (searchHandles handle !bots).bot in
+    bot.xPos <- (bot.xDir *. amt *. bot.speed) +. bot.xPos;
+    bot.yPos <- (bot.yDir *. amt *. bot.speed) +. bot.yPos
 
   (* Set the power level of the bot *)
   let setPower handle pwr = 
@@ -120,8 +122,8 @@ module BotHandler = struct
     let newbullet = {
       xPos = shootingbot.xPos;
       yPos = shootingbot.yPos;
-      xVel = shootingbot.xDir; (* calculate so that bullet speed is constant i.e. get unit vector from bot and multiply by constant*)
-      yVel = shootingbot.yDir; (* calculate so that bullet speed is constant i.e. get unit vector from bot and multiply by constant*)
+      xVel = shootingbot.xDir *. shootingbot.speed *. 0.5; (* calculate so that bullet speed is constant i.e. get unit vector from bot and multiply by constant*)
+      yVel = shootingbot.yDir *. shootingbot.speed *. 0.5; (* calculate so that bullet speed is constant i.e. get unit vector from bot and multiply by constant*)
       owner = handle;
     } in
     bullets := (!bullets@[newbullet])
@@ -134,19 +136,19 @@ module BotHandler = struct
 
   (* Makes a new bot with a given position, direction, power level and step function
    * [make (xPos,yPos) (xVec,yVec) power] *)
-  let make (xPos,yPos) (xVec,yVec) power = 
+  let make (xPos,yPos) (xVec,yVec) power speed = 
     let bot = {
       xPos = xPos;
       yPos = yPos;
       xDir = xVec;
       yDir = yVec;
-      speed = 0.0;
+      speed = speed;
       power = power;
       others = !bots;
     } in
     let handle = newHandle () in 
     (* add bot to [bots] *)
-    let _ = bots := {handle = handle; bot = bot; step = fun x -> ()}::(!bots) in 
+    let _ = bots := {handle = handle; bot = bot; step = fun x -> NoCmd}::(!bots) in 
     (* update all bots' [others] list *)
     let _ = updateOthers !bots in
     handle
@@ -155,18 +157,6 @@ module BotHandler = struct
   let assignStep (handle : handle) (step : handle -> command) : unit = 
     let bot = searchHandles handle !bots in 
     bot.step <- step
-
-  (* Updates all bots for a single logic tick *)
-  let step () =
-    let rec stepall (current : data list) (acc : data list) = (
-      match current with
-      | [] -> acc
-      | h::t -> 
-        let _ = h.step h.handle |> execute h.handle in
-        stepall t (h::acc)
-    ) in 
-    let _ = bots := (stepall !bots []) in
-    updateOthers !bots
 
   (* Updates all bullets for a single logic tick *)
   let stepBullets () =
@@ -181,17 +171,30 @@ module BotHandler = struct
     bullets := stepall !bullets [] 
 
   let execute handle = function
+    | NoCmd -> ()
     | Shoot -> shoot handle
-    | StSpeed s -> setSpeed handle s
+    | Forward a -> moveForward handle a
     | LT deg -> 
       let (x1,y1) = getDirection handle in
-      let theta' = ((atan2 y1 x1) + toRad deg) mod (2. *. pi) in
+      let theta' = mod_float ((atan2 y1 x1) +. toRad deg) (2. *. pi) in
       let (x2,y2) = (sin theta', cos theta') in
-      setDirection (x2,y2)
+      setDirection handle (x2,y2)
     | RT deg ->
-      let deg' = 360 - (deg mod 360) in
+      let deg' = 360. -. (mod_float deg 360.) in
       let (x1,y1) = getDirection handle in
-      let theta' = ((atan2 y1 x1) + toRad deg') mod (2. *. pi) in
+      let theta' = mod_float ((atan2 y1 x1) +. toRad deg') (2. *. pi) in
       let (x2,y2) = (sin theta', cos theta') in
-      setDirection (x2,y2)
+      setDirection handle (x2,y2)
+
+  (* Updates all bots for a single logic tick *)
+  let step () =
+    let rec stepall (current : data list) (acc : data list) = (
+      match current with
+      | [] -> acc
+      | h::t -> 
+        let _ = h.step h.handle |> execute h.handle in
+        stepall t (h::acc)
+    ) in 
+    let _ = bots := (stepall !bots []) in
+    updateOthers !bots
 end
