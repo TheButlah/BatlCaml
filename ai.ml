@@ -2,5 +2,5 @@ open Api
 
 type t = int
 
-let step enemy t =
-  failwith "Unimplemented"
+let step enemy you =
+  getDir enemy

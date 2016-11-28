@@ -1,7 +1,15 @@
 open Bot
 
+(* player and enemy handles *)
+val player : handle ref
+val enemy : handle ref
+
 (* type of datastructure maintained by the api *)
 type handle = BotHandler.handle
+
+(* set handles of player and enemy *)
+val initPlayer : handle -> unit
+val initEnemy : handle -> unit
 
 (* rotates the bot left *)
 val turnLeft : handle -> unit
