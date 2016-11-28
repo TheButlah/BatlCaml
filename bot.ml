@@ -1,21 +1,21 @@
 module BotHandler = struct
-  
-  (* Single element in [bots] *)
-  type data = {handle : handle; mutable bot : t; step : t -> t}
-
-  (* The type of a bot *)
-  type t = {
-    xPos : float;
-    yPos : float;
-    xDir : float;
-    yDir : float;
-    speed : float;
-    power : float;
-    mutable others : data list; (* each bot has info about every other bot *)
-  }
 
   (* The type representing a bot (like a pointer to a bot object) *)
   type handle = int
+
+  (* The type of a bot *)
+  type t = {
+    mutable xPos : float;
+    mutable yPos : float;
+    mutable xDir : float;
+    mutable yDir : float;
+    mutable speed : float;
+    mutable power : float;
+    mutable others : data list; (* each bot has info about every other bot *)
+  }
+  and 
+  (* Single element in [bots] *)
+  data = {handle : handle; mutable bot : t; step : t -> t}
 
   (* data structure holding all the bots and the associated step function *)
   type bots = data list ref 
@@ -40,22 +40,22 @@ module BotHandler = struct
   (* Gets the Position of the bot 
    * returns A 2D Tuple of the position in x,y *)
   let getPosition handle =
-    let data = searchHandles handle !bots in 
+    let data = (searchHandles handle !bots).bot in 
     (data.xPos, data.yPos)
 
   (* Gets the Direction of the bot
    * returns A 2D Tuple of the direction in x,y *)
   let getDirection handle = 
-  let data = searchHandles handle !bots in 
+  let data = (searchHandles handle !bots).bot in 
     (data.xDir, data.yDir)
 
   (* Gets the Speed of the bot *)
   let getSpeed handle =
-    (searchHandles handle !bots).speed
+    (searchHandles handle !bots).bot.speed
 
   (* Get the power level of the bot *)
   let getPower handle =
-    (searchHandles handle !bots).power
+    (searchHandles handle !bots).bot.power
 
   (* updates all [bot.others] with the current data list *)
   let rec updateOthers (datalist : data list) = 
@@ -71,7 +71,7 @@ module BotHandler = struct
       yPos = yPos;
       xDir = xVec;
       yDir = yVec;
-      speed = 0;
+      speed = 0.0;
       power = power;
       others = !bots;
     } in
@@ -84,9 +84,11 @@ module BotHandler = struct
 
   (* Updates all bots for a single logic tick *)
   let step () =
-    let rec stepall (bots : data list) = 
-      match bots with
-      | [] -> ()
-      | h::t -> h.bot <- (h.step h.bot); stepall t
-    in bots := stepall !bots
+    let rec stepall (current : data list) (acc : data list) = 
+      match current with
+      | [] -> acc
+      | h::t -> 
+        let _ = h.bot <- (h.step h.bot) in
+        stepall t (h::acc)
+    in bots := (stepall !bots [])
 end

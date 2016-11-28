@@ -1,5 +1,7 @@
+open Bot
+
 (* type of datastructure maintained by the api *)
-type t
+type t = BotHandler.t
 
 (* representation of self information *)
 type self

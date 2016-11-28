@@ -29,10 +29,11 @@ module type BotHandler = sig
   (* Get the power level of the bot *)
   val getPower : handle -> float
 
-  (* Makes a new bot with a given position, direction, and power level, and returns a handle
+  (* Makes a new bot with a given position, direction, and power level, adds 
+   * bot to list of bots and returns a handle
    * [make (xPos,yPos) (xVec,yVec) power] *)
   val make : (float * float) -> (float * float) -> float -> (t -> t) -> handle
 
-  (* Updates the bot with handle [handle] for a single logic tick *)
-  val step : handle -> unit
+  (* Updates all bots for a single logic tick *)
+  val step : unit -> unit
 end

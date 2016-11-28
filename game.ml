@@ -4,11 +4,6 @@ open Bullet
 
 type t
 
-module TheAI : Bot.AI = struct 
-  type t = int
-  let step t = failwith "Unimpelemnted"
-end
-
 module Bot = MakeBot (TheAI)
 module Bullet = MakeBullet (Bot)
 
