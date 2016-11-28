@@ -1,4 +1,4 @@
-module type Bot = sig
+module type BotHandler = sig
 
   (* The type of a bot *)
   type t
@@ -36,9 +36,3 @@ module type Bot = sig
   (* Updates the bot with handle [handle] for a single logic tick *)
   val step : handle -> unit
 end
-
-(* Makes a bot with the given AI *)
-module type MakeBot =
-  functor (A : AI) -> Bot
-
-module MakeBot : MakeBot

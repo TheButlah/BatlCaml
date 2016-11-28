@@ -1,4 +1,4 @@
-module MakeBot = struct
+module BotHandler = struct
   
   (* Single element in [bots] *)
   type data = {handle : handle; mutable bot : t; step : t -> t}
@@ -11,7 +11,7 @@ module MakeBot = struct
     yDir : float;
     speed : float;
     power : float;
-    others : data list; (* each bot has info about every other bot *)
+    mutable others : data list; (* each bot has info about every other bot *)
   }
 
   (* The type representing a bot (like a pointer to a bot object) *)
@@ -32,7 +32,7 @@ module MakeBot = struct
 
   (* helper that searches through [bots] and returns record 
    * takes in a handle and data list and outputs data *)
-  let searchHandles (handle : handle) (bots : data list) : data = 
+  let rec searchHandles (handle : handle) (bots : data list) : data = 
     match bots with 
     | [] -> failwith "unknown handle"
     | h::t -> if h.handle = handle then h else searchHandles handle t
@@ -57,6 +57,12 @@ module MakeBot = struct
   let getPower handle =
     (searchHandles handle !bots).power
 
+  (* updates all [bot.others] with the current data list *)
+  let rec updateOthers (datalist : data list) = 
+    match datalist with 
+    | [] -> ()
+    | h::t -> h.bot.others <- !bots; updateOthers t
+
   (* Makes a new bot with a given position, direction, power level and step function
    * [make (xPos,yPos) (xVec,yVec) power] *)
   let make (xPos,yPos) (xVec,yVec) power step = 
@@ -67,9 +73,13 @@ module MakeBot = struct
       yDir = yVec;
       speed = 0;
       power = power;
+      others = !bots;
     } in
     let handle = newHandle () in 
+    (* add bot to [bots] *)
     let _ = bots := {handle = handle; bot = bot; step = step}::(!bots) in 
+    (* update all bots' [others] list *)
+    let _ = updateOthers !bots in
     handle
 
   (* Updates all bots for a single logic tick *)
