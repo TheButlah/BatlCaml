@@ -1,4 +1,8 @@
 module type BotHandler = sig
+  
+  (* type of command returned by ai step function *)
+  type command
+
   (* The type of a bullet *)
   type bullet
 
@@ -14,6 +18,9 @@ module type BotHandler = sig
   (* data structure holding all the bots and the associated step function *)
   type bots
 
+  (* speed constant *)
+  val speed : float
+
   (* static datastructure holding all bots and their step functions and handles *)
   val bots : bots
 
@@ -22,6 +29,12 @@ module type BotHandler = sig
 
   (* creates a new handle *)
   val newHandle : int
+
+  (* room size *)
+  val roomSize : (int * int) ref
+
+  (* sets the room size *)
+  val setRoomSize : int -> int -> unit
 
   (* Gets the Position of the bot 
    * returns A 2D Tuple of the position in x,y *)
@@ -43,8 +56,8 @@ module type BotHandler = sig
   (* Sets the Direction of the bot*)
   val setDirection : handle -> float * float -> unit
 
-  (* Sets the Speed of the bot *)
-  val setSpeed : handle -> float -> unit
+  (* Moves the bot forward by a constant amount*)
+  val moveForward : handle -> unit
 
   (* Set the power level of the bot *)
   val setPower : handle -> float -> unit
@@ -65,4 +78,6 @@ module type BotHandler = sig
 
   (* Updates all bullets for a single logic tick *)
   val stepBullet : unit -> unit
+
+  val execute : 
 end

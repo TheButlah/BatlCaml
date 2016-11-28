@@ -1,5 +1,21 @@
 module BotHandler = struct
   
+  (* constants for math *)
+  let pi = 3.14159265358979312
+
+  let toRad (deg : float) = 
+    ((deg mod 360.)/.360.) *. 2. *. pi
+
+  let toDeg (rad : float) = 
+    ((rad mod (2. *. pi))/.(2. *. pi)) *. 360.
+
+  (* type of command returned by ai step function *)
+  type command = 
+    | Shoot 
+    | Forward of float
+    | LT of float
+    | RT of float
+
   (* The type representing a bot (like a pointer to a bot object) *)
   type handle = int
 
@@ -9,13 +25,12 @@ module BotHandler = struct
     mutable yPos : float;
     mutable xDir : float;
     mutable yDir : float;
-    mutable speed : float;
     mutable power : float;
     mutable others : data list; (* each bot has info about every other bot *)
   }
   and 
   (* Single element in [bots] *)
-  data = {handle : handle; mutable bot : t; mutable step : handle -> unit}
+  data = {handle : handle; mutable bot : t; mutable step : handle -> command}
 
   (* data structure holding all the bots and the associated step function *)
   type bots = data list ref 
@@ -37,6 +52,13 @@ module BotHandler = struct
 
   (* static datastructure holding all bullets their and handles *)
   let bullets =  ref []
+
+  (* room size *)
+  let roomSize = ref (0 * 0)
+
+  (* sets the room size *)
+  let setRoomSize x y = 
+    roomSize := (x, y)
 
   (* creates a new handle *)
   let newvar = ref 0
@@ -82,9 +104,11 @@ module BotHandler = struct
     let _ = (searchHandles handle !bots).bot.xDir <- x in 
     (searchHandles handle !bots).bot.yDir <- y
 
-  (* Sets the Speed of the bot *)
-  let setSpeed handle sp = 
-    (searchHandles handle !bots).bot.speed <- sp
+  (* Moves the bot forward *)
+  let moveForward handle amt = 
+    let bot = searchHandles handle !bots in
+    bot.xPos <- (bot.xDir *. amt) + bot.xPos;
+    (* UNCOMPLETED *)
 
   (* Set the power level of the bot *)
   let setPower handle pwr = 
@@ -128,7 +152,7 @@ module BotHandler = struct
     handle
 
   (* assigns a step function to the bot with handle [handle] *)
-  let assignStep (handle : handle) (step : handle -> unit) : unit = 
+  let assignStep (handle : handle) (step : handle -> command) : unit = 
     let bot = searchHandles handle !bots in 
     bot.step <- step
 
@@ -138,7 +162,7 @@ module BotHandler = struct
       match current with
       | [] -> acc
       | h::t -> 
-        let _ = h.step h.handle in
+        let _ = h.step h.handle |> execute h.handle in
         stepall t (h::acc)
     ) in 
     let _ = bots := (stepall !bots []) in
@@ -155,4 +179,19 @@ module BotHandler = struct
       | h::t -> stepall t (stepsingle h; (acc@[h]))
     ) in
     bullets := stepall !bullets [] 
+
+  let execute handle = function
+    | Shoot -> shoot handle
+    | StSpeed s -> setSpeed handle s
+    | LT deg -> 
+      let (x1,y1) = getDirection handle in
+      let theta' = ((atan2 y1 x1) + toRad deg) mod (2. *. pi) in
+      let (x2,y2) = (sin theta', cos theta') in
+      setDirection (x2,y2)
+    | RT deg ->
+      let deg' = 360 - (deg mod 360) in
+      let (x1,y1) = getDirection handle in
+      let theta' = ((atan2 y1 x1) + toRad deg') mod (2. *. pi) in
+      let (x2,y2) = (sin theta', cos theta') in
+      setDirection (x2,y2)
 end

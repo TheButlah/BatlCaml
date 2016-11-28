@@ -7,6 +7,9 @@ val enemy : handle ref
 (* type of datastructure maintained by the api *)
 type handle = BotHandler.handle
 
+(* type of command *)
+type command = BotHandler.command
+
 (* set handles of player and enemy *)
 val initPlayer : handle -> unit
 val initEnemy : handle -> unit

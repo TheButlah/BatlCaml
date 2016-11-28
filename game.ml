@@ -7,6 +7,8 @@ let handle2 = BotHandler.make (5.0, 5.0) (0.0, 0.0) 100.0
 BotHandler.assignStep handle1 (Ai.step1 handle2)
 BotHandler.assignStep handle2 (Ai.step2 handle1)
 
+BotHandler.setRoomSize 500 500
+
 let step () =
   BotHandler.step ();
   BotHandler.stepBullets ()
