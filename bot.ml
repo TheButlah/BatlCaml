@@ -1,44 +1,7 @@
-module type AI = sig
-  type t
-  val step : t -> t
-end
-
-module type Bot = sig
-
-  (* The type of a bot *)
-  type t
-
-  (* Gets the Position of the bot 
-   * returns A 2D Tuple of the position in x,y *)
-  val getPosition : t -> float * float
-
-  (* Gets the Direction of the bot
-   * returns A 2D Tuple of the direction in x,y *)
-  val getDirection : t -> float * float
-
-  (* Gets the Speed of the bot *)
-  val getSpeed : t -> float
-
-  (* Get the power level of the bot *)
-  val getPower : t -> float
-
-  (* Makes a new bot with a given position, direction, and power level
-   * [make (xPos,yPos) (xVec,yVec) power] *)
-  val make : (float * float) -> (float * float) -> float -> t
-
-  (* Updates the bot for a single logic tick *)
-  val step : t -> t
-end
-
-module type MakeBot =
-  functor (A : AI) -> Bot
-
-
-module AI = struct
-
-end
-
-module MakeBot (A : AI) = struct
+module MakeBot = struct
+  
+  (* Single element in [bots] *)
+  type data = {handle : handle; mutable bot : t; step : t -> t}
 
   (* The type of a bot *)
   type t = {
@@ -48,38 +11,72 @@ module MakeBot (A : AI) = struct
     yDir : float;
     speed : float;
     power : float;
+    others : data list; (* each bot has info about every other bot *)
   }
+
+  (* The type representing a bot (like a pointer to a bot object) *)
+  type handle = int
+
+  (* data structure holding all the bots and the associated step function *)
+  type bots = data list ref 
+
+  (* static datastructure holding all bots and their step functions and handles *)
+  let bots =  ref []
+
+  (* creates a new handle *)
+  let newvar = ref 0
+  let newHandle () = 
+    let handle = !newvar in 
+    let _ = newvar := !newvar+1 in
+    handle
+
+  (* helper that searches through [bots] and returns record 
+   * takes in a handle and data list and outputs data *)
+  let searchHandles (handle : handle) (bots : data list) : data = 
+    match bots with 
+    | [] -> failwith "unknown handle"
+    | h::t -> if h.handle = handle then h else searchHandles handle t
 
   (* Gets the Position of the bot 
    * returns A 2D Tuple of the position in x,y *)
-  let getPosition t =
-    (t.xPos, t.yPos)
+  let getPosition handle =
+    let data = searchHandles handle !bots in 
+    (data.xPos, data.yPos)
 
   (* Gets the Direction of the bot
    * returns A 2D Tuple of the direction in x,y *)
-  let getDirection t = 
-    (t.xDir, t.yDir)
+  let getDirection handle = 
+  let data = searchHandles handle !bots in 
+    (data.xDir, data.yDir)
 
   (* Gets the Speed of the bot *)
-  let getSpeed t =
-    t.speed
+  let getSpeed handle =
+    (searchHandles handle !bots).speed
 
   (* Get the power level of the bot *)
-  let getPower t =
-    t.power
+  let getPower handle =
+    (searchHandles handle !bots).power
 
-  (* Makes a new bot with a given position, direction, and power level
+  (* Makes a new bot with a given position, direction, power level and step function
    * [make (xPos,yPos) (xVec,yVec) power] *)
-  let make (xPos,yPos) (xVec,yVec) power = {
-    xPos = xPos;
-    yPos = yPos;
-    xDir = xVec;
-    yDir = yVec;
-    speed = 0;
-    power = power;
-  }
+  let make (xPos,yPos) (xVec,yVec) power step = 
+    let bot = {
+      xPos = xPos;
+      yPos = yPos;
+      xDir = xVec;
+      yDir = yVec;
+      speed = 0;
+      power = power;
+    } in
+    let handle = newHandle () in 
+    let _ = bots := {handle = handle; bot = bot; step = step}::(!bots) in 
+    handle
 
-  (* Updates the bot for a single logic tick *)
-  let step t =
-    A.step t
+  (* Updates all bots for a single logic tick *)
+  let step () =
+    let rec stepall (bots : data list) = 
+      match bots with
+      | [] -> ()
+      | h::t -> h.bot <- (h.step h.bot); stepall t
+    in bots := stepall !bots
 end
