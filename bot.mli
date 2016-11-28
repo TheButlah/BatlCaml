@@ -18,9 +18,6 @@ module type BotHandler = sig
   (* data structure holding all the bots and the associated step function *)
   type bots
 
-  (* speed constant *)
-  val speed : float
-
   (* static datastructure holding all bots and their step functions and handles *)
   val bots : bots
 
@@ -28,7 +25,7 @@ module type BotHandler = sig
   val bullets : bullets
 
   (* creates a new handle *)
-  val newHandle : int
+  val newHandle : unit -> handle
 
   (* room size *)
   val roomSize : (int * int) ref
@@ -57,7 +54,7 @@ module type BotHandler = sig
   val setDirection : handle -> float * float -> unit
 
   (* Moves the bot forward by a constant amount*)
-  val moveForward : handle -> unit
+  val moveForward : handle -> float -> unit
 
   (* Set the power level of the bot *)
   val setPower : handle -> float -> unit
@@ -66,22 +63,22 @@ module type BotHandler = sig
   val shoot : handle -> unit
 
   (* assigns a step function to the bot with handle [handle] *)
-  val assignStep : handle -> (handle -> unit) -> unit
+  val assignStep : handle -> (handle -> command) -> unit
 
   (* Makes a new bot with a given position, direction, and power level, adds 
    * bot to list of bots and returns a handle
    * [make (xPos,yPos) (xVec,yVec) power] *)
-  val make : (float * float) -> (float * float) -> float -> (t -> t) -> handle
+  val make : (float * float) -> (float * float) -> float -> float -> handle
 
   (* Updates all bots for a single logic tick *)
   val step : unit -> unit
 
   (* Updates all bullets for a single logic tick *)
-  val stepBullet : unit -> unit
+  val stepBullets : unit -> unit
 
   (* Executes the returned variant of the step function for Ai *)
-  val execute : handle -> unit
+  val execute : handle -> command -> unit
 
   (* Constructs a command variant using string [string] *)
-  val makeCommand : string -> command
+  val makeCommand : string -> float -> command
 end

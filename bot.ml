@@ -1,6 +1,35 @@
-module BotHandler = struct
-  
-  (* constants for math *)
+module type BotHandler = sig
+  type command
+  type bullet
+  type bullets
+  type t
+  type handle
+  type bots
+  val bots : bots
+  val bullets : bullets
+  val newHandle : unit -> handle
+  val roomSize : (int * int) ref
+  val setRoomSize : int -> int -> unit
+  val getPosition : handle -> float * float
+  val getDirection : handle -> float * float
+  val getSpeed : handle -> float
+  val getPower : handle -> float
+  val setPosition : handle -> float * float -> unit
+  val setDirection : handle -> float * float -> unit
+  val moveForward : handle -> float -> unit
+  val setPower : handle -> float -> unit
+  val shoot : handle -> unit
+  val assignStep : handle -> (handle -> command) -> unit
+  val make : (float * float) -> (float * float) -> float -> float -> handle
+  val step : unit -> unit
+  val stepBullets : unit -> unit
+  val execute : handle -> command -> unit
+  val makeCommand : string -> float -> command
+end
+
+module BotHandler : BotHandler = struct
+
+  (* math helpers *)
   let pi = 3.14159265358979312
 
   let toRad (deg : float) = 
