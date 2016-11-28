@@ -1,4 +1,4 @@
-module type Bullet = sig
+module type BulletHandler = sig
   (* The type of a bullet that has a position, velocity, and owner *)
   type t
 

@@ -1,5 +1,5 @@
 module BotHandler = struct
-
+  
   (* The type representing a bot (like a pointer to a bot object) *)
   type handle = int
 
@@ -20,8 +20,23 @@ module BotHandler = struct
   (* data structure holding all the bots and the associated step function *)
   type bots = data list ref 
 
+  (* The type of a bullet *)
+  type bullet = {
+    mutable xPos : float;
+    mutable yPos : float;
+    mutable xVel : float;
+    mutable yVel : float;
+    owner : handle;
+  }
+
+  (* Data structure holding all the bullets *)
+  type bullets = bullet list ref 
+
   (* static datastructure holding all bots and their step functions and handles *)
   let bots =  ref []
+
+  (* static datastructure holding all bullets their and handles *)
+  let bullets =  ref []
 
   (* creates a new handle *)
   let newvar = ref 0
@@ -57,6 +72,36 @@ module BotHandler = struct
   let getPower handle =
     (searchHandles handle !bots).bot.power
 
+  (* Sets the Position of the bot *)
+  let setPosition handle (x, y) = 
+    let _ = (searchHandles handle !bots).bot.xPos <- x in 
+    (searchHandles handle !bots).bot.yPos <- y
+
+  (* Sets the Direction of the bot*)
+  let setDirection handle (x, y) = 
+    let _ = (searchHandles handle !bots).bot.xDir <- x in 
+    (searchHandles handle !bots).bot.yDir <- y
+
+  (* Sets the Speed of the bot *)
+  let setSpeed handle sp = 
+    (searchHandles handle !bots).bot.speed <- sp
+
+  (* Set the power level of the bot *)
+  let setPower handle pwr = 
+    (searchHandles handle !bots).bot.power <- pwr
+
+  (* Create a bullet with a given handle *)
+  let shoot handle = 
+    let shootingbot = (searchHandles handle !bots).bot in 
+    let newbullet = {
+      xPos = shootingbot.xPos;
+      yPos = shootingbot.yPos;
+      xVel = shootingbot.xDir; (* calculate so that bullet speed is constant i.e. get unit vector from bot and multiply by constant*)
+      yVel = shootingbot.yDir; (* calculate so that bullet speed is constant i.e. get unit vector from bot and multiply by constant*)
+      owner = handle;
+    } in
+    bullets := (!bullets@[newbullet])
+
   (* updates all [bot.others] with the current data list *)
   let rec updateOthers (datalist : data list) = 
     match datalist with 
@@ -84,11 +129,25 @@ module BotHandler = struct
 
   (* Updates all bots for a single logic tick *)
   let step () =
-    let rec stepall (current : data list) (acc : data list) = 
+    let rec stepall (current : data list) (acc : data list) = (
       match current with
       | [] -> acc
       | h::t -> 
         let _ = h.bot <- (h.step h.bot) in
         stepall t (h::acc)
-    in bots := (stepall !bots [])
+    ) in 
+    let _ = bots := (stepall !bots []) in
+    updateOthers !bots
+
+  (* Updates all bullets for a single logic tick *)
+  let stepBullets () =
+    let stepsingle (b : bullet) : unit =
+      b.xPos <- b.xPos +. b.yVel;
+      b.yPos <- b.yPos +. b.yVel
+    in let rec stepall (current : bullet list) (acc : bullet list) : bullet list= (
+      match current with 
+      | [] -> acc 
+      | h::t -> stepall t (stepsingle h; (acc@[h]))
+    ) in
+    bullets := stepall !bullets [] 
 end
