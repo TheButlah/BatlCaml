@@ -16,7 +16,7 @@ val turnRight : float -> command
 val shoot : unit -> command
 
 (* moves forward *)
-val forward : unit -> command
+val forward : float -> command
 
 (* does nothing *)
 val noCommand : unit -> command
@@ -34,4 +34,4 @@ val getDirection : handle -> float * float
 val getSpeed : handle -> float
 
 (* get the (length,width) of room *)
-val getRoomSize : handle -> int * int
+val getRoomSize : unit -> int * int
