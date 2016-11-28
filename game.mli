@@ -1,8 +1,4 @@
 open Bot
-open Bullet
-
-(* type of datastructure for stepping the game *)
-type t
 
 (* bullet module specific to a bot *)
 module Bullet : Bullet
@@ -11,19 +7,19 @@ module Bullet : Bullet
 module Bot : Bot
 
 (* steps the game one frame *)
-val step : t -> t
+val step : unit -> unit
 
 (* returns the list of bullets currently in the game *)
-val getBullets : t -> Bullet.t list
+val getBullets : unit -> BotHandler.bullets
 
 (* returns the list of bots currently in the game *)
-val getBots : t -> Bot.t list
+val getBots : unit -> BotHandler.bots
 
 (* returns width of the room *)
-val getWidth : t -> int
+val getWidth : unit -> int
 
 (* returns height of the room *)
-val getHeight : t -> int
+val getHeight : unit -> int
 
 (* returns score of the game *)
-val getScore : t -> int
+val getScore : unit -> int

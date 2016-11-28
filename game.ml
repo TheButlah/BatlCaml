@@ -1,26 +1,27 @@
 open Ai
 open Bot
-open Bullet
 
-type t
+let handle1 = BotHandler.make (0.0, 0.0) (0.0, 0.0) 100.0
+let handle2 = BotHandler.make (5.0, 5.0) (0.0, 0.0) 100.0
 
-module Bot = MakeBot (TheAI)
-module Bullet = MakeBullet (Bot)
+BotHandler.assignStep handle1 (Ai.step1 handle2)
+BotHandler.assignStep handle2 (Ai.step2 handle1)
 
-let step t =
+let step () =
+  BotHandler.step ();
+  BotHandler.stepBullets ()
+
+let getBullets () = 
+  BotHandler.bullets
+
+let getBots () =
+  BotHandler.bots
+
+let getWidth () =
   failwith "Unimplemented"
 
-let getBullets t = 
+let getHeight () =
   failwith "Unimplemented"
 
-let getBots t =
-  failwith "Unimplemented"
-
-let getWidth t =
-  failwith "Unimplemented"
-
-let getHeight t =
-  failwith "Unimplemented"
-
-let getScore t =
+let getScore () =
   failwith "Unimplemented"

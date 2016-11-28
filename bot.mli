@@ -49,6 +49,12 @@ module type BotHandler = sig
   (* Set the power level of the bot *)
   val setPower : handle -> float -> unit
 
+  (* Create a bullet with a given handle *)
+  val shoot : handle -> unit
+
+  (* assigns a step function to the bot with handle [handle] *)
+  val assignStep : handle -> (handle -> unit) -> unit
+
   (* Makes a new bot with a given position, direction, and power level, adds 
    * bot to list of bots and returns a handle
    * [make (xPos,yPos) (xVec,yVec) power] *)

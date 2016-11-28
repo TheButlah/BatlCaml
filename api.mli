@@ -3,44 +3,38 @@ open Bot
 (* type of datastructure maintained by the api *)
 type handle = BotHandler.handle
 
-(* representation of self information *)
-type self
-
-(* representation of the enemy's information *)
-type enemy
-
 (* rotates the bot left *)
-val turnLeft : float -> t -> t
+val turnLeft : handle -> unit
 
 (* rotates the bot right *)
-val turnRight : float -> t -> t
+val turnRight : handle -> unit
 
 (* sets speed *)
-val setSpeed : float -> t -> t
+val setSpeed : handle -> unit
 
 (* shoots a bullet *)
-val shoot : t -> t
+val shoot : handle -> unit
 
 (* returns health of self *)
-val getHealth : self -> float
+val getHealth : handle -> float
 
 (* returns position of self *)
-val getPos : self -> (float * float)
+val getPos : handle -> float * float
 
 (* returns direction of self *)
-val getDirection : self -> (float * float)
+val getDirection : handle -> float * float
 
 (* returns speed of self *)
-val getSpeed : self -> float
+val getSpeed : handle -> float
 
 (* get the (length,width) of room *)
-val getRoomSize : t -> (int * int)
+val getRoomSize : handle -> int * int
 
 (* returns enemy position *)
-val enemyPosition : enemy -> (float * float)
+val enemyPosition : handle -> float * float
 
 (* returns enemy velocity *)
-val enemyVelocity : enemy -> (float * float)
+val enemyVelocity : handle -> float * float
 
 (* returns enemy health *)
-val enemyHealth : enemy -> float
+val enemyHealth : handle -> float

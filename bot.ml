@@ -15,7 +15,7 @@ module BotHandler = struct
   }
   and 
   (* Single element in [bots] *)
-  data = {handle : handle; mutable bot : t; step : t -> t}
+  data = {handle : handle; mutable bot : t; mutable step : handle -> unit}
 
   (* data structure holding all the bots and the associated step function *)
   type bots = data list ref 
@@ -110,7 +110,7 @@ module BotHandler = struct
 
   (* Makes a new bot with a given position, direction, power level and step function
    * [make (xPos,yPos) (xVec,yVec) power] *)
-  let make (xPos,yPos) (xVec,yVec) power step = 
+  let make (xPos,yPos) (xVec,yVec) power = 
     let bot = {
       xPos = xPos;
       yPos = yPos;
@@ -122,10 +122,15 @@ module BotHandler = struct
     } in
     let handle = newHandle () in 
     (* add bot to [bots] *)
-    let _ = bots := {handle = handle; bot = bot; step = step}::(!bots) in 
+    let _ = bots := {handle = handle; bot = bot; step = fun x -> ()}::(!bots) in 
     (* update all bots' [others] list *)
     let _ = updateOthers !bots in
     handle
+
+  (* assigns a step function to the bot with handle [handle] *)
+  let assignStep (handle : handle) (step : handle -> unit) : unit = 
+    let bot = searchHandles handle !bots in 
+    bot.step <- step
 
   (* Updates all bots for a single logic tick *)
   let step () =
@@ -133,7 +138,7 @@ module BotHandler = struct
       match current with
       | [] -> acc
       | h::t -> 
-        let _ = h.bot <- (h.step h.bot) in
+        let _ = h.step h.handle in
         stepall t (h::acc)
     ) in 
     let _ = bots := (stepall !bots []) in

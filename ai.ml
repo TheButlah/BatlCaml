@@ -2,5 +2,5 @@ open Api
 
 type t = int
 
-let step t =
+let step enemy t =
   failwith "Unimplemented"
