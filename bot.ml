@@ -1,11 +1,11 @@
 module type AI = sig
   type t
- val step : t -> t
+  val step : t -> t
 end
 
 module type Bot = sig
 
-  (* The t:ype of a bot *)
+  (* The type of a bot *)
   type t
 
   (* Gets the Position of the bot 
@@ -33,35 +33,53 @@ end
 module type MakeBot =
   functor (A : AI) -> Bot
 
+
+module AI = struct
+
+end
+
 module MakeBot (A : AI) = struct
 
-  (* The t:ype of a bot *)
-  type t
+  (* The type of a bot *)
+  type t = {
+    xPos : float;
+    yPos : float;
+    xDir : float;
+    yDir : float;
+    speed : float;
+    power : float;
+  }
 
   (* Gets the Position of the bot 
    * returns A 2D Tuple of the position in x,y *)
   let getPosition t =
-    failwith "Unimplemented"
+    (t.xPos, t.yPos)
 
   (* Gets the Direction of the bot
    * returns A 2D Tuple of the direction in x,y *)
   let getDirection t = 
-    failwith "Unimplemented"
+    (t.xDir, t.yDir)
 
   (* Gets the Speed of the bot *)
   let getSpeed t =
-    failwith "Unimplemented"
+    t.speed
 
   (* Get the power level of the bot *)
   let getPower t =
-    failwith "Unimplemented"
+    t.power
 
   (* Makes a new bot with a given position, direction, and power level
    * [make (xPos,yPos) (xVec,yVec) power] *)
-  let make (xPos,yPos) (xVec,yVec) power =
-    failwith "Unimplemented"   
+  let make (xPos,yPos) (xVec,yVec) power = {
+    xPos = xPos;
+    yPos = yPos;
+    xDir = xVec;
+    yDir = yVec;
+    speed = 0;
+    power = power;
+  }
 
   (* Updates the bot for a single logic tick *)
   let step t =
-    failwith "Unimplemented"
+    A.step t
 end
