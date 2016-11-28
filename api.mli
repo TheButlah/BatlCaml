@@ -1,30 +1,25 @@
 open Bot
 
-(* player and enemy handles *)
-val player : handle ref
-val enemy : handle ref
-
 (* type of datastructure maintained by the api *)
-type handle = BotHandler.handle
+type handle
 
-(* type of command *)
-type command = BotHandler.command
-
-(* set handles of player and enemy *)
-val initPlayer : handle -> unit
-val initEnemy : handle -> unit
+(* command type variant *)
+type command
 
 (* rotates the bot left *)
-val turnLeft : handle -> unit
+val turnLeft : float -> command
 
 (* rotates the bot right *)
-val turnRight : handle -> unit
-
-(* sets speed *)
-val setSpeed : handle -> unit
+val turnRight : float -> command
 
 (* shoots a bullet *)
-val shoot : handle -> unit
+val shoot : unit -> command
+
+(* moves forward *)
+val forward : unit -> command
+
+(* does nothing *)
+val noCommand : unit -> command
 
 (* returns health of self *)
 val getHealth : handle -> float
@@ -40,12 +35,3 @@ val getSpeed : handle -> float
 
 (* get the (length,width) of room *)
 val getRoomSize : handle -> int * int
-
-(* returns enemy position *)
-val enemyPosition : handle -> float * float
-
-(* returns enemy velocity *)
-val enemyVelocity : handle -> float * float
-
-(* returns enemy health *)
-val enemyHealth : handle -> float

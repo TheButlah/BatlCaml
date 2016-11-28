@@ -1,4 +1,7 @@
 open Api
 
-let step enemy you =
+let step1 enemy you =
+	noCommand ()
   
+let step2 enemy you =
+	noCommand ()

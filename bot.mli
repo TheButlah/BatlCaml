@@ -79,5 +79,9 @@ module type BotHandler = sig
   (* Updates all bullets for a single logic tick *)
   val stepBullet : unit -> unit
 
-  val execute : 
+  (* Executes the returned variant of the step function for Ai *)
+  val execute : handle -> unit
+
+  (* Constructs a command variant using string [string] *)
+  val makeCommand : string -> command
 end

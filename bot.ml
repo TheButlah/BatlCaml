@@ -170,6 +170,7 @@ module BotHandler = struct
     ) in
     bullets := stepall !bullets [] 
 
+  (* Executes the returned variant of the step function for Ai *)
   let execute handle = function
     | NoCmd -> ()
     | Shoot -> shoot handle
@@ -186,6 +187,15 @@ module BotHandler = struct
       let (x2,y2) = (sin theta', cos theta') in
       setDirection handle (x2,y2)
 
+  (* Constructs a command variant using string [string] *)
+  let makeCommand s arg = 
+    match s with 
+    | x when x = "Shoot" -> Shoot
+    | x when x = "Forward" -> Forward arg
+    | x when x = "LT" -> LT arg
+    | x when x = "RT" -> RT arg
+    | _ -> NoCmd
+
   (* Updates all bots for a single logic tick *)
   let step () =
     let rec stepall (current : data list) (acc : data list) = (
@@ -197,4 +207,5 @@ module BotHandler = struct
     ) in 
     let _ = bots := (stepall !bots []) in
     updateOthers !bots
+
 end
