@@ -22,6 +22,9 @@ val getMaxSpeed : t -> float
 (* Get the power level of the bot *)
 val getPower : t -> float
 
+(* Gets id of the bot *)
+val getID : t -> int
+
 (* Sets the Position of the bot *)
 val setPosition : float * float -> t -> t
 

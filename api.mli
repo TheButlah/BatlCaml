@@ -1,3 +1,14 @@
+(* enemy type *)
+type enemy = {
+	xPos : float;
+	yPos : float;
+	xDir : float;
+	yDir : float;
+	speed : float;
+	power : float;
+	id : int;
+}
+
 (* rotates the bot left *)
 val turnLeft : float -> Bot.command
 
@@ -25,6 +36,12 @@ val getDirection : Bot.t -> float * float
 (* returns speed of self *)
 val getSpeed : Bot.t -> float
 
+(* returns id of self *)
+val getID : Bot.t -> float
+
 (* get the (length,width) of room *)
 val getRoomSize : unit -> int * int
+
+(* gets the enemies of the game and returns a list of them *)
+val getEnemies : unit -> enemy list
 

@@ -24,7 +24,16 @@ type t = {
   power : float;
   stepFunc : (t -> command); 
   maxSpeed : float;
+  id : int;
 }
+
+(* id static variable *)
+let newid = ref 0
+
+(* makes a new id *)
+let makeid () = 
+  let i = !newid in 
+  let _ = newid := !newid + 1 in i
 
 (* Gets the Position of the bot 
  * returns A 2D Tuple of the position in x,y *)
@@ -43,6 +52,10 @@ let getMaxSpeed bot =
 (* Get the power level of the bot *)
 let getPower bot =
   bot.power
+
+(* Gets id of the bot *)
+let getID bot = 
+  bot.id
 
 (* Sets the Position of the bot *)
 let setPosition (x, y) bot = 
@@ -73,4 +86,6 @@ let make (xPos,yPos) (xVec,yVec) power maxSpeed stepAI = {
     yDir = yVec;
     maxSpeed = maxSpeed;
     power = power;
-    stepFunc = stepAI;} 
+    stepFunc = stepAI;
+    id = makeid ()
+} 
