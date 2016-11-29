@@ -1,7 +1,12 @@
-SRCS = bot.ml bot.mli api.ml api.mli ai.ml ai.mli game.ml game.mli
+SRCS = bot.byte api.byte ai.byte game.byte view.byte
 
-main: $(SRCS)
-	ocamlbuild -pkgs oUnit main.byte 
+all: $(SRCS)
+
+run: main.byte
+	./main.byte
+
+%.byte : %.ml
+	ocamlbuild -lib dynlink $@
 
 clean:
 	ocamlbuild -clean
