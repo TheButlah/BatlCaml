@@ -1,9 +1,12 @@
-SRCS = bot.byte bullet.byte api.byte ai.byte game.byte view.byte control.byte
+SRCS = bot.byte bullet.byte api.byte ai.byte game.byte view.byte control.byte collisions.byte test.byte
 
 all: $(SRCS)
 
 run: main.byte
 	./main.byte
+
+test: test.byte
+	./test.byte
 
 %.byte : %.ml
 	ocamlbuild -lib dynlink $@
@@ -11,5 +14,5 @@ run: main.byte
 clean:
 	ocamlbuild -clean
 
-test:
-	ocamlbuild -pkgs oUnit,str,unix test.byte && ./test.byte
+test.byte:
+	ocamlbuild -pkgs oUnit,str,unix test.byte
