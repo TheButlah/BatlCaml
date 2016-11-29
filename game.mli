@@ -1,9 +1,10 @@
 open Bot
+open Bullet
 
-(* open Bullet *)
-
+(* type of the game state *)
 type t
 
+(* static datastructure holding the state *)
 val state : t
 
 (* The type representing a bot handle (like a pointer to a bot object) 
@@ -15,10 +16,8 @@ val init : (Bot.t -> Bot.command) list -> int -> float -> unit
 (* steps the game one frame *)
 val step : unit -> unit
 
-(* TODO:
 (* returns the list of bullets currently in the game *)
 val getBullets : t -> Bullet.t list
-*)
 
 (* returns the list of bots currently in the game *)
 val getBots : unit -> Bot.t list
@@ -28,3 +27,6 @@ val getWidth : unit -> float
 
 (* returns height of the room *)
 val getHeight : unit -> float
+
+(* executes a command returned by the step function *)
+val execute : Bot.t -> Bot.command -> Bot.t
