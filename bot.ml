@@ -159,12 +159,12 @@ let assignStep (handle : handle) (step : handle -> command) : unit =
 (* Updates all bullets for a single logic tick *)
 let stepBullets () =
   let stepsingle (b : bullet) : unit =
-    b.xPos <- b.xPos +. b.yVel;
+    b.xPos <- b.xPos +. b.xVel;
     b.yPos <- b.yPos +. b.yVel
-  in let rec stepall (current : bullet list) (acc : bullet list) : bullet list= (
+  in let rec stepall (current : bullet list) (acc : bullet list) : bullet list = (
     match current with 
     | [] -> acc 
-    | h::t -> stepall t (stepsingle h; (acc@[h]))
+    | h::t -> stepall t (let _ = stepsingle h in (acc@[h]))
   ) in
   bullets := stepall !bullets [] 
 
