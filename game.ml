@@ -2,18 +2,26 @@ open Bot
 (* open Bullet *)
 
 type t = {
-  roomWidth : float;
-  roomHeight : float;
-  maxBotSpeed : float;
-  bulletSpeed : float;
-  botList : Bot.t list;
+  mutable roomWidth : float;
+  mutable roomHeight : float;
+  mutable maxBotSpeed : float;
+  mutable bulletSpeed : float;
+  mutable botList : Bot.t list;
   (* bulletList : Bullet.t list *)
+}
+
+let state = {
+  roomWidth = -1.0;
+  roomHeight = -1.0;
+  maxBotSpeed = -1.0;
+  bulletSpeed = -1.0;
+  botList = [];
 }
 
 (* Value of PI *)
 let pi = 3.14159265359
 
-let make (aiList :(Bot.t -> Bot.command) list) seed botRadius=
+let init (aiList :(Bot.t -> Bot.command) list) seed botRadius=
   Random.init seed; 
   let roomWidth = 500.0 in
   let roomHeight = 500.0 in
@@ -27,28 +35,28 @@ let make (aiList :(Bot.t -> Bot.command) list) seed botRadius=
               Random.float (roomHeight -. 2.0*.botRadius) +. botRadius)
              (cos randAngle, sin randAngle)
              startingPower maxBotSpeed ai) aiList in
-  {
-    roomWidth = roomWidth;
-    roomHeight = roomHeight;
-    maxBotSpeed = maxBotSpeed;
-    bulletSpeed = bulletSpeed;
-    botList = botList;
-    (* bulletList = []; *)
-  }
+  state.roomWidth <- roomWidth;
+  state.roomHeight <- roomHeight;
+  state.maxBotSpeed <- maxBotSpeed;
+  state.bulletSpeed <-bulletSpeed;
+  state.botList <- botList
+  (* bulletList = []; *)
 
 
 let step () =
-  Bot.step ();
-  Bot.stepBullets ()
+  List.iter (fun bot -> 
+    ()
+  ) state.botList
 
+(*  
 let getBullets () = 
-  Bot.bullets
+  ()  *)
 
 let getBots () =
-  Bot.bots
+  state.botList
 
 let getWidth () =
-  roomwidth
+  state.roomWidth
 
 let getHeight () =
-  roomheight
+  state.roomHeight

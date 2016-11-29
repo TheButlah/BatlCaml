@@ -54,7 +54,7 @@ let getID bot =
 
 (* get the (length,width) of room *)
 let getRoomSize () = 
-	roomSize
+	(Game.getWidth (), Game.getHeight ())
 
 (* makes an enemy given a bot *)
 let makeEnemy bot = 
@@ -64,9 +64,9 @@ let makeEnemy bot =
 		yPos = y;
 		xDir = xd;
 		yDir = yd;
-		speed = Bot.getSpeed;
+		speed = Bot.getMaxSpeed bot;
 		power = Bot.getPower bot;
-		id = Bot.getID
+		id = Bot.getID bot
 	}
 
 (* gets the enemies of the game and returns a list of them *)
@@ -79,7 +79,7 @@ let getEnemies bot =
 			if en.id = getID bot
 			then iter t acc 
 			else iter t (acc@[en])
-	in iter (Game.getBots) []
+	in iter (Game.getBots ()) []
 
 
 
