@@ -1,4 +1,4 @@
-SRCS = bot.byte api.byte ai.byte game.byte view.byte
+SRCS = bot.byte api.byte ai.byte game.byte view.byte control.byte
 
 all: $(SRCS)
 

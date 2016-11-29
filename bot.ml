@@ -6,8 +6,6 @@ type command =
   | LT of float
   | RT of float
 
-(* The type representing a bot (like a pointer to a bot object) *)
-type handle = int
 
 (* math helpers *)
 let pi = 3.14159265358979312
@@ -20,103 +18,57 @@ let toDeg (rad : float) =
 
 (* The type of a bot *)
 type t = {
-  mutable xPos : float;
-  mutable yPos : float;
-  mutable xDir : float;
-  mutable yDir : float;
-  mutable power : float;
-  mutable others : data list; (* each bot has info about every other bot *)
-  speed : float;
+  xPos : float;
+  yPos : float;
+  xDir : float;
+  yDir : float;
+  power : float;
+  stepFunc : (t -> command); 
+  maxSpeed : float;
 }
-and 
-(* Single element in [bots] *)
-data = {handle : handle; mutable bot : t; mutable step : handle -> command}
-
-(* data structure holding all the bots and the associated step function *)
-type bots = data list ref 
-
-(* The type of a bullet *)
-type bullet = {
-  mutable xPos : float;
-  mutable yPos : float;
-  mutable xVel : float;
-  mutable yVel : float;
-  owner : handle;
-}
-
-(* Data structure holding all the bullets *)
-type bullets = bullet list ref 
-
-(* static datastructure holding all bots and their step functions and handles *)
-let bots = ref []
-
-(* static datastructure holding all bullets their and handles *)
-let bullets = ref []
 
 (* room size *)
 let roomSize = ref (0, 0)
 
-(* sets the room size *)
-let setRoomSize x y = 
-  roomSize := (x, y)
-
-(* creates a new handle *)
-let newvar = ref 0
-let newHandle () = 
-  let handle = !newvar in 
-  let _ = newvar := !newvar+1 in
-  handle
-
-(* helper that searches through [bots] and returns record 
- * takes in a handle and data list and outputs data *)
-let rec searchHandles (handle : handle) (bots : data list) : data = 
-  match bots with 
-  | [] -> failwith "unknown handle"
-  | h::t -> if h.handle = handle then h else searchHandles handle t
-
 (* Gets the Position of the bot 
  * returns A 2D Tuple of the position in x,y *)
-let getPosition handle =
-  let data = (searchHandles handle !bots).bot in 
-  (data.xPos, data.yPos)
+let getPosition bot =
+  (bot.xPos, bot.yPos)
 
 (* Gets the Direction of the bot
  * returns A 2D Tuple of the direction in x,y *)
-let getDirection handle = 
-let data = (searchHandles handle !bots).bot in 
-  (data.xDir, data.yDir)
+let getDirection bot = 
+  (bot.xDir, bot.yDir)
 
-(* Gets the Speed of the bot *)
-let getSpeed handle =
-  (searchHandles handle !bots).bot.speed
+(* Gets the maximum speed of the bot *)
+let getMaxSpeed bot =
+  bot.maxSpeed
 
 (* Get the power level of the bot *)
-let getPower handle =
-  (searchHandles handle !bots).bot.power
+let getPower bot =
+  bot.power
 
 (* Sets the Position of the bot *)
-let setPosition handle (x, y) = 
-  let _ = (searchHandles handle !bots).bot.xPos <- x in 
-  (searchHandles handle !bots).bot.yPos <- y
+let setPosition bot (x, y) = 
+  {bot with xPos = x;
+            yPos = y;}
 
 (* Sets the Direction of the bot*)
-let setDirection handle (x, y) = 
-  let _ = (searchHandles handle !bots).bot.xDir <- x in 
-  (searchHandles handle !bots).bot.yDir <- y
+let setDirection bot (x, y) = 
+  {bot with xDir = x;
+            yDir = y;}
 
 (* Moves the bot forward *)
-let moveForward handle amt = 
-  let bot = (searchHandles handle !bots).bot in
-  bot.xPos <- (bot.xDir *. amt *. bot.speed) +. bot.xPos;
-  bot.yPos <- (bot.yDir *. amt *. bot.speed) +. bot.yPos
+let moveForward bot speedPct =
+  {bot with xPos = (bot.xDir *. speedPct *. bot.maxSpeed) +. bot.xPos;
+            yPos = (bot.yDir *. speedPct *. bot.maxSpeed) +. bot.yPos;}
 
 (* Set the power level of the bot *)
-let setPower handle pwr = 
-  (searchHandles handle !bots).bot.power <- pwr
+let setPower bot pwr = 
+  {bot with power = pwr} 
 
 (* Create a bullet with a given handle *)
-let shoot handle = 
-  let shootingbot = (searchHandles handle !bots).bot in 
+let shoot bot = 
   let newbullet = {
     xPos = shootingbot.xPos;
     yPos = shootingbot.yPos;

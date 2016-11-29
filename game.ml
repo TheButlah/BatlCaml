@@ -1,17 +1,32 @@
 open Ai
 open Bot
 
-let roomwidth = 500;;
-let roomheight = 500;;
-let roomspeed = 10.0;;
+type t = {
+  roomWidth : int;
+  roomHeight : int;
+  roomSpeed : float;
+  handles : handle list;
+}
 
-let handle1 = Bot.make (0.0, 0.0) (0.0, 0.0) 100.0 roomspeed;;
-let handle2 = Bot.make (5.0, 5.0) (0.0, 0.0) 100.0 roomspeed;;
+let make () = 
+  let roomWidth = 500 in
+  let roomHeight = 500 in
+  let roomSpeed = 10.0 in
 
-Bot.assignStep handle1 (Ai.step1 handle2);;
-Bot.assignStep handle2 (Ai.step2 handle1);;
+  let handle1 = Bot.make (0.0, 0.0) (0.0, 0.0) 100.0 roomSpeed in
+  let handle2 = Bot.make (5.0, 5.0) (0.0, 0.0) 100.0 roomSpeed in
 
-Bot.setRoomSize roomwidth roomheight
+  Bot.assignStep handle1 (Ai.step1 handle2);;
+  Bot.assignStep handle2 (Ai.step2 handle1);;
+
+  Bot.setRoomSize roomWidth roomHeight
+  {
+    roomWidth = roomWidth;
+    roomHeight = roomHeight;
+    roomSpeed = roomSpeed;
+    handles = [handle1; handle2] 
+  }
+
 
 let step () =
   Bot.step ();

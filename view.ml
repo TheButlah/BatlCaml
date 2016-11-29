@@ -1,5 +1,7 @@
+open Game
+
 (* type of datastructure maintained by the view *)
-type t = CHANGETHIS
+type t = CHANGETHIS (*TODO: Implement this *)
 
 (* print out the informations *)
 let printInfo t =
@@ -11,4 +13,7 @@ let outputLog t =
 
 (* entry point for program *)
 let main =
+  failwith "Unimplemented"
+
+let printBotInfo (bot:Bot.t) : unit =
   failwith "Unimplemented"

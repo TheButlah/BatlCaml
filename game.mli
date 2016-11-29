@@ -1,17 +1,24 @@
 open Bot
 
+type t
+
+(* The type representing a bot handle (like a pointer to a bot object) *)
+type handle = int
+
+val make : unit -> t
+
 (* steps the game one frame *)
-val step : unit -> unit
+val step : t -> t
 
 (* returns the list of bullets currently in the game *)
-val getBullets : unit -> Bot.bullets
+val getBullets : t -> Bot.bullets
 
 (* returns the list of bots currently in the game *)
-val getBots : unit -> Bot.bots
+val getBots : t -> Bot.bots
 
 (* returns width of the room *)
-val getWidth : unit -> int
+val getWidth : t -> int
 
 (* returns height of the room *)
-val getHeight : unit -> int
+val getHeight : t -> int
 
