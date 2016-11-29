@@ -7,7 +7,7 @@ val step : unit -> unit
 val getBullets : unit -> Bot.bullets
 
 (* returns the list of bots currently in the game *)
-val getBots : unit -> BotHandler.bots
+val getBots : unit -> Bot.bots
 
 (* returns width of the room *)
 val getWidth : unit -> int
