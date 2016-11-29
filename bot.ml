@@ -7,7 +7,8 @@ type command =
   | Wait
 
 (* math helpers *)
-let pi = 3.14159265359
+
+let pi = 3.14159265358979324
 
 let toRad (deg : float) = 
   ((mod_float deg 360.)/.360.) *. 2. *. pi
