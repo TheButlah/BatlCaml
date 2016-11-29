@@ -1,14 +1,8 @@
 (* type of command returned by ai step function *)
 type command
 
-(* The type of a bullet *)
-type bullet
-
 (* The type of a bot *)
 type t
-
-(* room size *)
-val roomSize : (int * int) ref
 
 (* Gets the Position of the bot 
  * returns A 2D Tuple of the position in x,y *)
@@ -25,21 +19,23 @@ val getMaxSpeed : t -> float
 val getPower : t -> float
 
 (* Sets the Position of the bot *)
-val setPosition : t -> float * float -> t 
+val setPosition : float * float -> t -> t
 
 (* Sets the Direction of the bot*)
-val setDirection : t -> float * float -> t
+val setDirection : float * float -> t -> t
 
 (* Moves the bot forward by a constant amount*)
-val moveForward : t -> float -> t
+val moveForward : float -> t -> t
 
 (* Set the power level of the bot *)
-val setPower : t -> float -> t
+val setPower : float -> t -> t
 
-(* Makes a new bot with a given position, direction, and power level.
+(* Makes a new bot with a given position, direction, power level, and max speed.
  * Also assigns the ai step function to the bot.
- * [make (xPos,yPos) (xVec,yVec) power stepAI] *)
-val make : (float * float) -> (float * float) -> float -> (t -> command) -> t
-
-(* Updates a bot for a single logic tick *)
-val step : t -> t
+ * [make (xPos,yPos) (xVec,yVec) power maxSpeed stepAI] *)
+val make :  (float * float) -> 
+            (float * float) -> 
+            float -> 
+            float -> 
+            (t -> command) -> 
+            t

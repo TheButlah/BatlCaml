@@ -1,41 +1,50 @@
 open Bot
 
+type command =
+  | LT of float
+  | RT of float
+  | Shoot
+  | Forward of float
+  | Wait
+
+let roomSize = (500,500)
+
 (* rotates the bot left *)
 let turnLeft deg = 
-	Bot.makeCommand "LT" deg
+	LT deg
 
 (* rotates the bot right *)
 let turnRight deg = 
-	Bot.makeCommand "RT" deg
+  RT deg
 
 (* shoots a bullet *)
 let shoot () =
-	Bot.makeCommand "Shoot" 0.0
+  Shoot
 
 (* moves forward *)
 let forward amt = 
-	Bot.makeCommand "Forward" amt
+  Forward amt
 
 (* does nothing *)
-let noCommand () = 
-	Bot.makeCommand "NoCmd" 0.0
+let wait () = 
+  Wait
 
 (* returns health of self *)
-let getHealth handle = 
-	Bot.getPower handle
+let getHealth bot = 
+	Bot.getPower bot
 
 (* returns position of self *)
-let getPos handle = 
-	Bot.getPosition handle
+let getPos bot = 
+	Bot.getPosition bot
 
 (* returns direction of self *)
-let getDirection handle = 
-	Bot.getDirection handle
+let getDirection bot = 
+	Bot.getDirection bot
 
 (* returns speed of self *)
-let getSpeed handle = 
-	Bot.getSpeed handle
+let getSpeed bot= 
+	Bot.getMaxSpeed bot
 
 (* get the (length,width) of room *)
 let getRoomSize () = 
-	!Bot.roomSize
+	roomSize
