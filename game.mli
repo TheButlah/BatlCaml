@@ -15,5 +15,3 @@ val getWidth : unit -> int
 (* returns height of the room *)
 val getHeight : unit -> int
 
-(* returns score of the game *)
-val getScore : unit -> int

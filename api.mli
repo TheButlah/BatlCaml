@@ -1,37 +1,32 @@
 open Bot
 
-(* type of datastructure maintained by the api *)
-type handle
-
-(* command type variant *)
-type command
-
 (* rotates the bot left *)
-val turnLeft : float -> command
+val turnLeft : float -> Bot.command
 
 (* rotates the bot right *)
-val turnRight : float -> command
+val turnRight : float -> Bot.command
 
 (* shoots a bullet *)
-val shoot : unit -> command
+val shoot : unit -> Bot.command
 
 (* moves forward *)
-val forward : float -> command
+val forward : float -> Bot.command
 
 (* does nothing *)
-val noCommand : unit -> command
+val noCommand : unit -> Bot.command
 
 (* returns health of self *)
-val getHealth : handle -> float
+val getHealth : Bot.handle -> float
 
 (* returns position of self *)
-val getPos : handle -> float * float
+val getPos : Bot.handle -> float * float
 
 (* returns direction of self *)
-val getDirection : handle -> float * float
+val getDirection : Bot.handle -> float * float
 
 (* returns speed of self *)
-val getSpeed : handle -> float
+val getSpeed : Bot.handle -> float
 
 (* get the (length,width) of room *)
 val getRoomSize : unit -> int * int
+

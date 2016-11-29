@@ -1,11 +1,5 @@
 open Bot
 
-(* type of datastructure maintained by the api *)
-type handle = Bot.handle
-
-(* command type variant *)
-type command = Bot.command
-
 (* rotates the bot left *)
 let turnLeft deg = 
 	Bot.makeCommand "LT" deg
