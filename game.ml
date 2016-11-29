@@ -22,6 +22,12 @@ let state = {
 (* Math helpers *)
 let pi = 3.14159265359
 
+let toRad (deg : float) = 
+  ((mod_float deg 360.)/.360.) *. 2. *. pi
+
+let toDeg (rad : float) = 
+  ((mod_float rad (2. *. pi))/.(2. *. pi)) *. 360.
+
 let init (aiList :(Bot.t -> Bot.command) list) seed botRadius =
 	Random.init seed; 
 	let roomWidth = 500.0 in
@@ -69,11 +75,11 @@ let execute bot cmd =
 	    let (x2,y2) = (sin theta', cos theta') in
 	    Bot.setDirection (x2,y2) bot
 	| Shoot -> 
-		let pos = (bot.xPos, bot.yPos) in 
-		let dir = (bot.xDir, bot.yDir) in 
-		let id = bot.id in 
+		let pos = Bot.getPosition bot in 
+		let dir = Bot.getDirection bot in 
+		let id = Bot.getID bot in 
 		let spd = state.bulletSpeed in 
-		let _ = bulletList <- !bulletList@[Bullet.make pos dir spd id] in
+		state.bulletList <- state.bulletList@[Bullet.make pos dir spd id];
 		bot
 	| Forward amt -> 
 		Bot.moveForward amt bot

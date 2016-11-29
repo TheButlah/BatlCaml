@@ -14,7 +14,7 @@ val init : (Bot.t -> Bot.command) list -> int -> float -> unit
 val step : unit -> unit
 
 (* returns the list of bullets currently in the game *)
-val getBullets : t -> Bullet.t list
+val getBullets : unit -> Bullet.t list
 
 (* returns the list of bots currently in the game *)
 val getBots : unit -> Bot.t list
