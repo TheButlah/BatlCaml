@@ -25,6 +25,9 @@ val getPower : t -> float
 (* Gets id of the bot *)
 val getID : t -> int
 
+(* Gets the step function of the bot *)
+val getStepFunc : t -> (t -> command) 
+
 (* Sets the Position of the bot *)
 val setPosition : float * float -> t -> t
 

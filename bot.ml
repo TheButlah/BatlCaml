@@ -58,6 +58,10 @@ let getPower bot =
 let getID bot = 
   bot.id
 
+(* Gets the step function of the bot *)
+let getStepFunc bot = 
+  bot.stepFunc
+
 (* Sets the Position of the bot *)
 let setPosition (x, y) bot = 
   {bot with xPos = x;

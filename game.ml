@@ -19,7 +19,7 @@ let state = {
 	bulletList = []
 }
 
-(* Value of PI *)
+(* Math helpers *)
 let pi = 3.14159265359
 
 let init (aiList :(Bot.t -> Bot.command) list) seed botRadius =
@@ -42,10 +42,6 @@ let init (aiList :(Bot.t -> Bot.command) list) seed botRadius =
 	state.bulletSpeed <-bulletSpeed;
 	state.botList <- botList;
 	state.bulletList <- []
-
-let step () =
-	state.botList <- List.map (fun x -> x.stepFunc x |> execute x) state.botList;
-	state.bulletList <- List.map (fun x -> Bullet.step x) state.bulletList
  
 let getBullets () = 
 	state.bulletList
@@ -62,10 +58,31 @@ let getHeight () =
 let execute bot cmd = 
  	match cmd with
 	| LT deg -> 
+		let (x1,y1) = Bot.getDirection bot in
+	    let theta' = mod_float ((atan2 y1 x1) +. toRad deg) (2. *. pi) in
+	    let (x2,y2) = (sin theta', cos theta') in
+	    Bot.setDirection (x2,y2) bot
 	| RT deg -> 
+		let deg' = 360. -. (mod_float deg 360.) in
+	    let (x1,y1) = Bot.getDirection bot in
+	    let theta' = mod_float ((atan2 y1 x1) +. toRad deg') (2. *. pi) in
+	    let (x2,y2) = (sin theta', cos theta') in
+	    Bot.setDirection (x2,y2) bot
 	| Shoot -> 
+		let pos = (bot.xPos, bot.yPos) in 
+		let dir = (bot.xDir, bot.yDir) in 
+		let id = bot.id in 
+		let spd = state.bulletSpeed in 
+		let _ = bulletList <- !bulletList@[Bullet.make pos dir spd id] in
+		bot
 	| Forward amt -> 
+		Bot.moveForward amt bot
 	| Wait -> 
+		bot
+
+let step () =
+	state.botList <- List.map (fun x -> x |> getStepFunc x |> execute x) state.botList;
+	state.bulletList <- List.map (fun x -> Bullet.step x) state.bulletList
 
 
 

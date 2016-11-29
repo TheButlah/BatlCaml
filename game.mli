@@ -7,9 +7,6 @@ type t
 (* static datastructure holding the state *)
 val state : t
 
-(* The type representing a bot handle (like a pointer to a bot object) 
-type handle = int *)
-
 (* initializes the game state *) 
 val init : (Bot.t -> Bot.command) list -> int -> float -> unit
 
