@@ -1,29 +1,32 @@
 open Ai
 open Bot
 
-let handle1 = BotHandler.make (0.0, 0.0) (0.0, 0.0) 100.0
-let handle2 = BotHandler.make (5.0, 5.0) (0.0, 0.0) 100.0
+let roomwidth = 500
+let roomheight = 500
 
-BotHandler.assignStep handle1 (Ai.step1 handle2)
-BotHandler.assignStep handle2 (Ai.step2 handle1)
+let handle1 = Bot.make (0.0, 0.0) (0.0, 0.0) 100.0
+let handle2 = Bot.make (5.0, 5.0) (0.0, 0.0) 100.0
 
-BotHandler.setRoomSize 500 500
+Bot.assignStep handle1 (Ai.step1 handle2)
+Bot.assignStep handle2 (Ai.step2 handle1)
+
+Bot.setRoomSize roomwidth roomheight
 
 let step () =
-  BotHandler.step ();
-  BotHandler.stepBullets ()
+  Bot.step ();
+  Bot.stepBullets ()
 
 let getBullets () = 
-  BotHandler.bullets
+  Bot.bullets
 
 let getBots () =
-  BotHandler.bots
+  Bot.bots
 
 let getWidth () =
-  failwith "Unimplemented"
+  roomwidth
 
 let getHeight () =
-  failwith "Unimplemented"
+  roomheight
 
 let getScore () =
   failwith "Unimplemented"
