@@ -1,3 +1,6 @@
+open Bot
+open Game
+
 (* enemy type *)
 type enemy = {
 	xPos : float;
@@ -37,11 +40,10 @@ val getDirection : Bot.t -> float * float
 val getSpeed : Bot.t -> float
 
 (* returns id of self *)
-val getID : Bot.t -> float
+val getID : Bot.t -> int 
 
 (* get the (length,width) of room *)
-val getRoomSize : unit -> int * int
+val getRoomSize : unit -> float * float
 
 (* gets the enemies of the game and returns a list of them *)
-val getEnemies : unit -> enemy list
-
+val getEnemies : Bot.t -> enemy list
