@@ -48,7 +48,7 @@ let init (aiList :(Bot.t -> Bot.command) list) seed botRadius =
 	state.bulletSpeed <-bulletSpeed;
 	state.botList <- botList;
 	state.bulletList <- []
- 
+
 let getBullets () = 
 	state.bulletList
 
@@ -87,7 +87,8 @@ let execute bot cmd =
 		bot
 
 let step () =
-	state.botList <- List.map (fun x -> x |> getStepFunc x |> execute x) state.botList;
+	let stepbot x = x |> Bot.getStepFunc x |> execute x in 
+	state.botList <- List.map stepbot state.botList;
 	state.bulletList <- List.map (fun x -> Bullet.step x) state.bulletList
 
 
