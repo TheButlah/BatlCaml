@@ -10,7 +10,7 @@ type command =
 type handle = int
 
 (* math helpers *)
-let pi = 3.14159265358979312
+let pi = 3.14159265358979324
 
 let toRad (deg : float) = 
   ((mod_float deg 360.)/.360.) *. 2. *. pi
@@ -52,6 +52,8 @@ let bots = ref []
 
 (* static datastructure holding all bullets their and handles *)
 let bullets = ref []
+
+let num_bullet () = List.length (!bullets)
 
 (* room size *)
 let roomSize = ref (0, 0)

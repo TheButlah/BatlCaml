@@ -5,3 +5,6 @@ main: $(SRCS)
 
 clean:
 	ocamlbuild -clean
+
+test:
+	ocamlbuild -pkgs oUnit,str,unix test.byte && ./test.byte

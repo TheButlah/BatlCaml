@@ -22,6 +22,9 @@ val bots : bots
 (* static datastructure holding all bullets and their handles *)
 val bullets : bullets
 
+(* calculates the number of bullets in [bullets] *)
+val num_bullet : unit -> int
+
 (* creates a new handle *)
 val newHandle : unit -> handle
 
