@@ -1,12 +1,12 @@
 open OUnit2
 open Bot
+open Api
 
-let h1 = Bot.make (10.,10.) (1.,0.) 10. 10.
-let _ = assignStep h1 (fun _ -> makeCommand "LT" 90.)
+let h1 = Bot.make (10.,10.) (1.,0.) 10. 10. (fun _ -> Api.turnLeft 90.)
 
-let h2 = Bot.make (10.,10.) (1.,0.) 10. 10.
+let h2 = Bot.make (10.,10.) (1.,0.) 10. 10. (fun _ -> Api.turnLeft 90.)
 
-let h3 = Bot.make (10.,10.) (1.,0.) 10. 10.
+let h3 = Bot.make (10.,10.) (1.,0.) 10. 10. (fun _ -> Api.turnLeft 90.)
 
 let tests = "test suite" >::: [
   "Forward1" >::
