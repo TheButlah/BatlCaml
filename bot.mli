@@ -1,5 +1,9 @@
-(* type of command returned by ai step function *)
-type command
+type command = 
+  | LT of float
+  | RT of float
+  | Shoot
+  | Forward of float
+  | Wait
 
 (* The type of a bot *)
 type t

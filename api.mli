@@ -1,19 +1,17 @@
-type command
-
 (* rotates the bot left *)
-val turnLeft : float -> command
+val turnLeft : float -> Bot.command
 
 (* rotates the bot right *)
-val turnRight : float -> command
+val turnRight : float -> Bot.command
 
 (* shoots a bullet *)
-val shoot : unit -> command
+val shoot : unit -> Bot.command
 
 (* moves forward *)
-val forward : float -> command
+val forward : float -> Bot.command
 
 (* does nothing *)
-val wait : unit -> command
+val wait : unit -> Bot.command
 
 (* returns health of self *)
 val getHealth : Bot.t -> float

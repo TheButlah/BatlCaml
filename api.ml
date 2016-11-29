@@ -1,17 +1,10 @@
 open Bot
 
-type command =
-  | LT of float
-  | RT of float
-  | Shoot
-  | Forward of float
-  | Wait
-
 let roomSize = (500,500)
 
 (* rotates the bot left *)
 let turnLeft deg = 
-	LT deg
+  LT deg
 
 (* rotates the bot right *)
 let turnRight deg = 

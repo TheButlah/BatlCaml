@@ -1,30 +1,39 @@
-open Ai
 open Bot
+(* open Bullet *)
 
 type t = {
-  roomWidth : int;
-  roomHeight : int;
-  roomSpeed : float;
-  handles : handle list;
+  roomWidth : float;
+  roomHeight : float;
+  maxBotSpeed : float;
+  bulletSpeed : float;
+  botList : Bot.t list;
+  (* bulletList : Bullet.t list *)
 }
 
-let make () = 
-  let roomWidth = 500 in
-  let roomHeight = 500 in
-  let roomSpeed = 10.0 in
+(* Value of PI *)
+let pi = 3.14159265359
 
-  let handle1 = Bot.make (0.0, 0.0) (0.0, 0.0) 100.0 roomSpeed in
-  let handle2 = Bot.make (5.0, 5.0) (0.0, 0.0) 100.0 roomSpeed in
+let make (aiList :(Bot.t -> Bot.command) list) seed botRadius=
+  Random.init seed; 
+  let roomWidth = 500.0 in
+  let roomHeight = 500.0 in
+  let maxBotSpeed = 10.0 in
+  let bulletSpeed = 50.0 in
+  let startingPower = 100.0 in
 
-  Bot.assignStep handle1 (Ai.step1 handle2);;
-  Bot.assignStep handle2 (Ai.step2 handle1);;
-
-  Bot.setRoomSize roomWidth roomHeight
+  let randAngle = Random.float (2.0 *. pi) in
+  let botList = List.map (fun ai -> 
+    Bot.make (Random.float (roomWidth -. 2.0*.botRadius) +. botRadius,
+              Random.float (roomHeight -. 2.0*.botRadius) +. botRadius)
+             (cos randAngle, sin randAngle)
+             startingPower maxBotSpeed ai) aiList in
   {
     roomWidth = roomWidth;
     roomHeight = roomHeight;
-    roomSpeed = roomSpeed;
-    handles = [handle1; handle2] 
+    maxBotSpeed = maxBotSpeed;
+    bulletSpeed = bulletSpeed;
+    botList = botList;
+    (* bulletList = []; *)
   }
 
 

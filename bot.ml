@@ -1,8 +1,13 @@
 (* type of command returned by ai step function *)
-type command
+type command = 
+  | LT of float
+  | RT of float
+  | Shoot
+  | Forward of float
+  | Wait
 
 (* math helpers *)
-let pi = 3.14159265358979312
+let pi = 3.14159265359
 
 let toRad (deg : float) = 
   ((mod_float deg 360.)/.360.) *. 2. *. pi
