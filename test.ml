@@ -29,35 +29,35 @@ let tests = "test suite" >::: [
   "Forward1" >::
     (fun _ -> assert_equal
       ~printer: string_of_float 20.
-      (let temp = Game.execute (b1) (Api.forward 1.) in get_x (getPosition temp)));
+      (let temp = Game.execute (b1) (Api.forward 1.) in getPosition temp |> get_x));
   "Step1a" >::
     (fun _ -> assert_equal
       true
       (cmp_float
       ~epsilon: 0.000001
       (get_x (turn_left 90. direc))
-      (step (); get_x (getDirection (List.hd (getBots()))))));
+      (step (); getBots () |> List.hd |> getDirection |> get_x)));
   "Step1b" >::
     (fun _ -> assert_equal
       true
       (cmp_float
       ~epsilon: 0.000001
       (get_y (turn_left 90. direc))
-      (step (); get_y (getDirection (List.hd (getBots()))))));
+      (step (); getBots () |> List.hd |> getDirection |> get_y)));
   "Step2a" >::
     (fun _ -> assert_equal
       true
       (cmp_float
       ~epsilon: 0.000001
       (get_x (turn_left 360. direc))
-      (step (); step (); step (); get_x (getDirection (List.hd (getBots()))))));
+      (step (); step (); step (); getBots () |> List.hd |> getDirection |> get_x)));
   "Step2b" >::
     (fun _ -> assert_equal
       true
       (cmp_float
       ~epsilon: 0.000001
       (get_y (turn_left 360. direc))
-      (step (); step (); step (); get_y (getDirection (List.hd (getBots()))))));
+      (step (); step (); step (); getBots () |> List.hd |> getDirection |> get_y)));
   "LT1" >::
     (fun _ -> assert_equal
       ~printer: string_of_float (-1.)
@@ -69,7 +69,7 @@ let tests = "test suite" >::: [
   "Shoot" >::
     (fun _ -> assert_equal
       (1)
-      (let _ = Game.execute (b1) (Api.shoot()) in List.length (getBullets())));
+      (let _ = Game.execute (b1) (Api.shoot()) in getBullets () |> List.length));
   "NoCmd" >::
     (fun _ -> assert_equal
       (getID b1)
