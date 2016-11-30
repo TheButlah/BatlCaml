@@ -28,6 +28,9 @@ val getID : t -> int
 (* Gets the step function of the bot *)
 val getStepFunc : t -> (t -> command) 
 
+(* Gets the radius of the bot *)
+val getRadius : t -> float
+
 (* Sets the Position of the bot *)
 val setPosition : float * float -> t -> t
 
@@ -42,10 +45,11 @@ val setPower : float -> t -> t
 
 (* Makes a new bot with a given position, direction, power level, and max speed.
  * Also assigns the ai step function to the bot.
- * [make (xPos,yPos) (xVec,yVec) power maxSpeed stepAI] *)
+ * [make (xPos,yPos) (xVec,yVec) power maxSpeed radius stepAI] *)
 val make :  (float * float) -> 
             (float * float) -> 
             float -> 
             float -> 
+            float ->
             (t -> command) -> 
             t

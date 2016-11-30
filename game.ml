@@ -28,20 +28,21 @@ let toRad (deg : float) =
 let toDeg (rad : float) = 
   ((mod_float rad (2. *. pi))/.(2. *. pi)) *. 360.
 
-let init (aiList :(Bot.t -> Bot.command) list) seed botRadius =
+let init (aiList :(Bot.t -> Bot.command) list) seed =
 	Random.init seed; 
 	let roomWidth = 500.0 in
 	let roomHeight = 500.0 in
 	let maxBotSpeed = 10.0 in
 	let bulletSpeed = 50.0 in
 	let startingPower = 100.0 in
+	let botRadius = 5.0 in 
 
 	let randAngle = Random.float (2.0 *. pi) in
 	let botList = List.map (fun ai -> 
 	    Bot.make (Random.float (roomWidth -. 2.0*.botRadius) +. botRadius,
 	              Random.float (roomHeight -. 2.0*.botRadius) +. botRadius)
 	             (cos randAngle, sin randAngle)
-	             startingPower maxBotSpeed ai) aiList in
+	             startingPower maxBotSpeed botRadius ai) aiList in
 	state.roomWidth <- roomWidth;
 	state.roomHeight <- roomHeight;
 	state.maxBotSpeed <- maxBotSpeed;
