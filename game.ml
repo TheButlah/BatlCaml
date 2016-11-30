@@ -66,13 +66,13 @@ let execute bot cmd =
 	| LT deg -> 
 		let (x1,y1) = Bot.getDirection bot in
 	    let theta' = mod_float ((atan2 y1 x1) +. toRad deg) (2. *. pi) in
-	    let (x2,y2) = (sin theta', cos theta') in
+	    let (x2,y2) = (cos theta', sin theta') in
 	    Bot.setDirection (x2,y2) bot
 	| RT deg -> 
 		let deg' = 360. -. (mod_float deg 360.) in
 	    let (x1,y1) = Bot.getDirection bot in
 	    let theta' = mod_float ((atan2 y1 x1) +. toRad deg') (2. *. pi) in
-	    let (x2,y2) = (sin theta', cos theta') in
+	    let (x2,y2) = (cos theta',sin theta') in
 	    Bot.setDirection (x2,y2) bot
 	| Shoot -> 
 		let pos = Bot.getPosition bot in 
