@@ -1,6 +1,7 @@
 open Game
 open Bot 
 open Bullet
+open Ai
 
 (* info for bullets *)
 type bulletInfo = {
@@ -36,8 +37,7 @@ let init () =
 	let startingPower = 100.0 in
 	let rad = 5.0 in 
 	let spwr = 10.0 in
-	let alist = (* add this later *) in 
-	Game.init alist roomWidth roomHeight maxBotSpeed bulletSpeed startingPower rad spwr 
+	Game.init [Ai.step; Ai.step2] 5 roomWidth roomHeight maxBotSpeed bulletSpeed startingPower rad spwr 
 
 (* creates a botinfo record from a bot *)
 let makeBotInfo bot = 
@@ -55,7 +55,7 @@ let makeBulletInfo bullet =
 	{
 		x = bx;
 		y = by;
-		dir = Bullet.getPosition bullet;
+		dir = Bullet.getDirection bullet;
 		owner = Bullet.getID bullet
 	}
 

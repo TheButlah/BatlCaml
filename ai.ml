@@ -1,4 +1,7 @@
 open Api
 
 let step you =
-  Api.wait ()  
+	Api.wait ()  
+
+let step2 you = 
+	Api.wait ()
