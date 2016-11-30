@@ -2,7 +2,8 @@
 SRCS = bot bullet api ai game view control collisions main
 #SRCS = bot.byte bullet.byte api.byte ai.byte game.byte view.byte control.byte collisions.byte test.byte
 LIBS = dynlink
-PKGS = oUnit,sdl,bigarray,sdl.sdlttf,sdl.sdlimage,sdl.sdlmixer
+PKGS = oUnit
+#PKGS = oUnit,sdl,bigarray,sdl.sdlttf,sdl.sdlimage,sdl.sdlmixer
 #PKGS = oUnit,tsdl
 
 all: $(SRCS)

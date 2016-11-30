@@ -1,7 +1,9 @@
 open Api
 
 let step you =
-	Api.wait ()  
+	if (let (x, y) = getPos you in x > 0. )
+	then shoot ()
+	else turnLeft 90. 
 
 let step2 you = 
-	Api.wait ()
+	turnRight 90.
