@@ -89,11 +89,6 @@ let execute bot cmd =
 	| Wait ->
 		bot
 
-let step () =
-	let stepbot x = x |> Bot.getStepFunc x |> execute x in
-	state.botList <- List.map stepbot state.botList;
-	state.bulletList <- List.map (fun x -> Bullet.step x) state.bulletList
-
 let handleCollisions () =
   let rec enemy bot acc = 
     match bot with
@@ -115,6 +110,15 @@ let handleCollisions () =
       then enemy t1 acc
       else enemy t1 (acc@[!bottemp])
   in state.botList <- enemy state.botList []
+
+let step () =
+	let stepbot x = x |> Bot.getStepFunc x |> execute x in
+	state.botList <- List.map stepbot state.botList;
+	state.bulletList <- List.map (fun x -> Bullet.step x) state.bulletList;
+	handleCollisions ()
+
+let finished () = 
+	List.length state.botList = 1
 
 
 

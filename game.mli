@@ -30,3 +30,6 @@ val execute : Bot.t -> Bot.command -> Bot.t
 
 (* handles collisions between bots and bullets *)
 val handleCollisions : unit -> unit
+
+(* returns true if the game is finished *)
+val finished : unit -> bool
