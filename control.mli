@@ -5,14 +5,17 @@ open Bullet
 (* info for bullets *)
 type bulletInfo = {
 	x : float;
-	y : float
+	y : float;
+	dir : float * float;
+	owner : int
 }
 
 (* info for bots *)
 type botInfo = {
 	x : float;
 	y : float;
-	dir : float * float
+	dir : float * float;
+	id : int
 }
 
 (* type returned by the step function *)
