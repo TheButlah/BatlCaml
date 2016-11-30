@@ -1,3 +1,4 @@
 PKG oUnit
+PKG sdl
 
 B _build
