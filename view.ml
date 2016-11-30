@@ -43,7 +43,9 @@ let printArray a =
 		for j=0 to size2-1 do
 			if a.(i).(j) = 0 
 			then print_string " '"
-			else print_string " O"
+			else if a.(i).(j) = 1
+			then print_string " @"
+			else print_string " *"
 		done;
 		print_endline ""
 	done;
@@ -58,7 +60,7 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 	let screen = initWindow x y in 
 	let size = x in 
 	let size2 = y in 
-	let rec iter bots = (
+	let rec iter (bots : Control.botInfo list) = (
 		match bots with
 		| [] -> ()
 		| h::t -> 
@@ -75,7 +77,25 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 			screen.(hy').(hx') <- 1;
 			iter t
 	) in 
+	let rec iter2 (bullets : Control.bulletInfo list) = (
+		match bullets with
+		| [] -> () 
+		| h::t -> 
+			let hx = h.x in 
+			let hy = h.y in 
+			let width = ctrl.width in 
+			let height = ctrl.height in 
+			let sizef = size-1 |> float_of_int in 
+			let sizef2 = size2-1 |> float_of_int in 
+			let ratio = sizef /. width in 
+			let ratio2 = sizef2 /. height in 
+			let hx' = hx *. ratio |> int_of_float in 
+			let hy' = hy *. ratio2 |> int_of_float in 
+			screen.(hy').(hx') <- 2;
+			iter2 t
+	) in
 	iter ctrl.botList;
+	iter2 ctrl.bulletList;
 	minisleep delay;
 	printArray screen
 
@@ -87,7 +107,7 @@ let outputLog t =
 let main () =
 	Control.init ();
 	print_string("Enter the number of steps to take as an integer. Enter -1 to simulate until completion: ");
-	let printer = printScreen 50 30 0.1 in 
+	let printer = printScreen 50 50 0.05 in 
 	let count = read_int () in 
 	if count < 0
 	then
