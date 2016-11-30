@@ -1,7 +1,14 @@
-open Game
+open Control
 
 (* type of datastructure maintained by the view *)
-type t = CHANGETHIS (*TODO: Implement this *)
+type t = Control.t
+
+
+let rec printBulletInfo bl =
+  failwith "Unimplemented"
+
+let rec printBotInfo bl =
+  failwith "Unimplemented"
 
 (* print out the informations *)
 let printInfo t =
@@ -13,7 +20,12 @@ let outputLog t =
 
 (* entry point for program *)
 let main =
-  failwith "Unimplemented"
+  init();
+  let t = ref (step()) in
+  while not (!t).finished do
+  	let _ = printInfo !t in
+  	t := (step());
+  done
 
 let printBotInfo (bot:Bot.t) : unit =
   failwith "Unimplemented"
