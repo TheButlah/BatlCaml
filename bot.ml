@@ -26,7 +26,7 @@ type t = {
   maxSpeed : float;
   id : int;
   radius : float;
-  strength : float
+  shootPower : float
 }
 
 (* id static variable *)
@@ -67,9 +67,9 @@ let getStepFunc bot =
 let getRadius bot = 
   bot.radius
 
-(* Gets the strength of the bot *)
-let getStrength bot = 
-  bot.strength
+(* Gets the shoot power of the bot *)
+let getShootPower bot = 
+  bot.shootPower
 
 (* Sets the Position of the bot *)
 let setPosition (x, y) bot = 
@@ -103,5 +103,5 @@ let make (xPos,yPos) (xVec,yVec) power maxSpeed rad str stepAI = {
     stepFunc = stepAI;
     id = makeid ();
     radius = rad;
-    strength = str
+    shootPower = str
 } 

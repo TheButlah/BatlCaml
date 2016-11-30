@@ -28,22 +28,22 @@ let toRad (deg : float) =
 let toDeg (rad : float) =
   ((mod_float rad (2. *. pi))/.(2. *. pi)) *. 360.
 
-let init (aiList :(Bot.t -> Bot.command) list) seed =
+let init (aiList :(Bot.t -> Bot.command) list) seed rw rh mbs bs sp br spwr =
 	Random.init seed; 
-	let roomWidth = 500.0 in
-	let roomHeight = 500.0 in
-	let maxBotSpeed = 10.0 in
-	let bulletSpeed = 50.0 in
-	let startingPower = 100.0 in
-	let botRadius = 5.0 in 
-	let botStr = 10.0 in 
+	let roomWidth = rw in
+	let roomHeight = rh in
+	let maxBotSpeed = mbs in
+	let bulletSpeed = bs in
+	let startingPower = sp in
+	let botRadius = br in 
+	let shootpwr = spwr in 
 
 	let randAngle = Random.float (2.0 *. pi) in
 	let botList = List.map (fun ai ->
 	    Bot.make (Random.float (roomWidth -. 2.0*.botRadius) +. botRadius,
 	              Random.float (roomHeight -. 2.0*.botRadius) +. botRadius)
 	             (cos randAngle, sin randAngle)
-	             startingPower maxBotSpeed botRadius botStr ai) aiList in
+	             startingPower maxBotSpeed botRadius shootpwr ai) aiList in
 	state.roomWidth <- roomWidth;
 	state.roomHeight <- roomHeight;
 	state.maxBotSpeed <- maxBotSpeed;
@@ -81,7 +81,7 @@ let execute bot cmd =
 		let dir = Bot.getDirection bot in
 		let id = Bot.getID bot in
 		let spd = state.bulletSpeed in
-		let str = Bot.getStrength bot in 
+		let str = Bot.getShootPower bot in 
 		state.bulletList <- state.bulletList@[Bullet.make pos dir spd str id];
 		bot
 	| Forward amt ->
