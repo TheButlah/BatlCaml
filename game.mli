@@ -7,7 +7,7 @@ type t
 (* static datastructure holding the state *)
 val state : t
 
-(* initializes the game state *) 
+(* initializes the game state *)
 val init : (Bot.t -> Bot.command) list -> int -> float -> unit
 
 (* steps the game one frame *)
@@ -27,3 +27,6 @@ val getHeight : unit -> float
 
 (* executes a command returned by the step function *)
 val execute : Bot.t -> Bot.command -> Bot.t
+
+(* handles collisions between bots and bullets *)
+val handleCollisions : unit -> unit
