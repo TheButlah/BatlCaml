@@ -1,18 +1,16 @@
-SRCS = bot.byte bullet.byte api.byte ai.byte game.byte view.byte control.byte collisions.byte test.byte
+#Do not put test in the variable below.
+SRCS = bot bullet api ai game view control collisions
+#SRCS = bot.byte bullet.byte api.byte ai.byte game.byte view.byte control.byte collisions.byte test.byte
 
 all: $(SRCS)
+	ocamlbuild -pkg oUnit -lib dynlink test.byte
 
-run: main.byte
-	./main.byte
+$(SRCS):
+	ocamlbuild -pkg oUnit -lib dynlink $@.byte
 
-test: test.byte
-	./test.byte
-
-%.byte : %.ml
-	ocamlbuild -lib dynlink $@
+test: 
+	ocamlbuild -pkg oUnit -lib dynlink test.byte && ./test.byte
 
 clean:
 	ocamlbuild -clean
 
-test.byte:
-	ocamlbuild -pkgs oUnit,str,unix test.byte

@@ -6,6 +6,7 @@ type t = {
   yDir : float;
   speed : float;
   id : int;
+  power : float;
 }
 
 (* gets the position of the bullet *)
@@ -24,14 +25,19 @@ let getSpeed bullet =
 let getID bullet = 
 	bullet.id
 
+(* gets power of the bullet *)
+let getPower bullet = 
+	bullet.power
+
 (* creates a bullet *)
-let make (x, y) (xd, yd) sp i = {
+let make (x, y) (xd, yd) sp p i = {
   xPos = x;
   yPos = y;
   xDir = xd;
   yDir = yd;
   speed = sp;
-  id = i
+  id = i;
+  power = p
 }
 
 (* steps the bullet *)
@@ -41,5 +47,6 @@ let step bullet = {
 	xDir = bullet.xDir;
 	yDir = bullet.yDir;
 	speed = bullet.speed;
-	id = bullet.id
+	id = bullet.id;
+	power = bullet.power
 }
