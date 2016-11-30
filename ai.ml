@@ -1,9 +1,9 @@
 open Api
 
+let turned = ref false
 let step you =
-	if (let (x, y) = getPos you in x > 0. )
-	then shoot ()
-	else turnLeft 90. 
+	if !turned then shoot () else 
+	let _ = turned := true in turnLeft 65.
 
 let step2 you = 
-	turnRight 90.
+	wait ()

@@ -16,6 +16,7 @@ type botInfo = {
 	x : float;
 	y : float;
 	dir : float * float;
+	power : float;
 	id : int
 }
 
@@ -33,7 +34,7 @@ let init () =
 	let roomWidth = 500.0 in
 	let roomHeight = 500.0 in
 	let maxBotSpeed = 10.0 in
-	let bulletSpeed = 10.0 in
+	let bulletSpeed = 2.0 in
 	let startingPower = 100.0 in
 	let rad = 5.0 in 
 	let spwr = 10.0 in
@@ -47,6 +48,7 @@ let makeBotInfo bot =
 		x = bx;
 		y = by;
 		dir = Bot.getDirection bot;
+		power = Bot.getPower bot;
 		id = Bot.getID bot
 	}
 

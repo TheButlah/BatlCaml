@@ -1,3 +1,6 @@
+open Control
+open Format
+
 (* type of datastructure maintained by the view *)
 type t
 

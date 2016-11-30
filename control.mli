@@ -1,6 +1,7 @@
 open Game
 open Bot 
 open Bullet
+open Ai 
 
 (* info for bullets *)
 type bulletInfo = {
@@ -15,6 +16,7 @@ type botInfo = {
 	x : float;
 	y : float;
 	dir : float * float;
+	power : float;
 	id : int
 }
 

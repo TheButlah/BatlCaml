@@ -18,7 +18,7 @@ let rec printBotInfo (bt : Control.botInfo list) =
 	| [] -> ()
 	| h::t -> 
 		let (xdir, ydir) = h.dir in 
-		Format.printf "[BOT x:%f y:%f dir:(%f,%f) id:%i] \n" h.x h.y xdir ydir h.id;
+		Format.printf "[BOT x:%f y:%f dir:(%f,%f) power:%f id:%i] \n" h.x h.y xdir ydir h.power h.id;
 		printBotInfo t
 
 (* print out the informations *)
@@ -40,14 +40,17 @@ let main () =
 	let count = read_int () in 
 	if count < 0
 	then
-		let t = ref (step()) in
+		let t = ref (step ()) in
 		while not (!t).finished do
 			let _ = printInfo !t in
-			t := (step());
-		done
+			let _ = t := (step ()) in 
+			if (!t).finished 
+			then let _ = printInfo !t in ()
+			else ()
+		done 
 	else 
-		let t = ref (step()) in
+		let t = ref (step ()) in
 		for i = 0 to count do
 			let _ = printInfo !t in
-			t := (step());
+			t := (step ());
 		done

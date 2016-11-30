@@ -90,26 +90,28 @@ let execute bot cmd =
 		bot
 
 let handleCollisions () =
-  let rec enemy bot acc = 
-    match bot with
+  let rec enemy bots acc = 
+    match bots with
     | [] -> acc
-    | h1::t1 -> 
-      let bottemp = ref h1 in
-      let rec bulletList bullets acc2 = 
-        match bullets with
-        | [] -> acc2
-        | h2::t2 ->
-			if Collisions.bulletCollision h2 h1 
-			then
-				let botpower = Bot.getPower !bottemp in 
-				let bulletpower = Bullet.getPower h2 in
-				bottemp := Bot.setPower (botpower -. bulletpower) !bottemp;
-				bulletList t2 acc2
-			else bulletList t2 (acc2@[h2])
-      in state.bulletList <- bulletList state.bulletList [];
-      if Bot.getPower !bottemp <= 0.0
-      then enemy t1 acc
-      else enemy t1 (acc@[!bottemp])
+    | h1::t1 -> (
+		let bottemp = ref h1 in
+		let rec iterbullets bullets acc2 = (
+	        match bullets with
+	        | [] -> acc2
+	        | h2::t2 ->
+				if Collisions.bulletCollision h2 h1 
+				then
+					let botpower = Bot.getPower !bottemp in 
+					let bulletpower = Bullet.getPower h2 in
+					let _ = bottemp := Bot.setPower (botpower -. bulletpower) !bottemp in 
+					iterbullets t2 acc2
+				else iterbullets t2 (acc2@[h2])
+		) in 
+		let _ = state.bulletList <- iterbullets state.bulletList [] in 
+		if Bot.getPower !bottemp <= 0.
+		then enemy t1 acc
+		else enemy t1 (acc@[!bottemp])
+	)
   in state.botList <- enemy state.botList []
 
 let adjustBotPositions () =
