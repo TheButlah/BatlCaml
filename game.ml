@@ -111,10 +111,27 @@ let handleCollisions () =
       else enemy t1 (acc@[!bottemp])
   in state.botList <- enemy state.botList []
 
+let adjustBotPositions () =
+	let rec adjust bots acc = 
+		match bots with
+		| [] -> acc
+		| h::t -> 
+			let bot' = Collisions.adjustBot state.roomWidth state.roomHeight h in
+			adjust t (acc@[bot'])
+	in state.botList <- adjust state.botList []
+
+let adjustBullets () =
+	let w = state.roomWidth in 
+	let h = state.roomHeight in 
+	let outside = Collisions.bulletOutside in 
+	state.bulletList <- List.filter (outside w h) state.bulletList
+
 let step () =
 	let stepbot x = x |> Bot.getStepFunc x |> execute x in
 	state.botList <- List.map stepbot state.botList;
 	state.bulletList <- List.map (fun x -> Bullet.step x) state.bulletList;
+	adjustBotPositions ();
+	adjustBullets ();
 	handleCollisions ()
 
 let finished () = 
