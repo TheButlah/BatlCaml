@@ -32,7 +32,7 @@ type t = {
 (* initializes a game *)
 let init () = 
 	let roomWidth = 500.0 in
-	let roomHeight = 500.0 in
+	let roomHeight = 300.0 in
 	let maxBotSpeed = 10.0 in
 	let bulletSpeed = 2.0 in
 	let startingPower = 100.0 in
