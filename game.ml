@@ -93,18 +93,19 @@ let handleCollisions () =
   let rec enemy bot acc = 
     match bot with
     | [] -> acc
-    | h1::t1 ->
+    | h1::t1 -> 
       let bottemp = ref h1 in
-      let rec bulletList bullets acc2 = (
+      let rec bulletList bullets acc2 = 
         match bullets with
         | [] -> acc2
         | h2::t2 ->
-          let bulletcol = Collisions.bulletCollision h2 h1 in 
-          if bulletcol then
-              let _ = bottemp := Bot.setPower (Bot.getPower !bottemp -. Bullet.getPower h2) !bottemp in
-              bulletList t2 acc2@[h2]
-          else bulletList t2 acc2
-      )
+			if Collisions.bulletCollision h2 h1 
+			then
+				let botpower = Bot.getPower !bottemp in 
+				let bulletpower = Bullet.getPower h2 in
+				bottemp := Bot.setPower (botpower -. bulletpower) !bottemp;
+				bulletList t2 acc2
+			else bulletList t2 (acc2@[h2])
       in state.bulletList <- bulletList state.bulletList [];
       if Bot.getPower !bottemp <= 0.0
       then enemy t1 acc
@@ -124,12 +125,12 @@ let adjustBullets () =
 	let w = state.roomWidth in 
 	let h = state.roomHeight in 
 	let outside = Collisions.bulletOutside in 
-	state.bulletList <- List.filter (outside w h) state.bulletList
+	state.bulletList <- List.filter (fun x -> not (outside w h x)) state.bulletList
 
 let step () =
 	let stepbot x = x |> Bot.getStepFunc x |> execute x in
 	state.botList <- List.map stepbot state.botList;
-	state.bulletList <- List.map (fun x -> Bullet.step x) state.bulletList;
+	state.bulletList <- List.map Bullet.step state.bulletList;
 	adjustBotPositions ();
 	adjustBullets ();
 	handleCollisions ()
