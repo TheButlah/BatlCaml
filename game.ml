@@ -19,8 +19,6 @@ let state = {
 	bulletList = []
 }
 
-let bulletpower = 10.
-
 (* Math helpers *)
 let pi = 3.14159265359
 
@@ -38,13 +36,14 @@ let init (aiList :(Bot.t -> Bot.command) list) seed =
 	let bulletSpeed = 50.0 in
 	let startingPower = 100.0 in
 	let botRadius = 5.0 in 
+	let botStr = 10.0 in 
 
 	let randAngle = Random.float (2.0 *. pi) in
 	let botList = List.map (fun ai ->
 	    Bot.make (Random.float (roomWidth -. 2.0*.botRadius) +. botRadius,
 	              Random.float (roomHeight -. 2.0*.botRadius) +. botRadius)
 	             (cos randAngle, sin randAngle)
-	             startingPower maxBotSpeed botRadius ai) aiList in
+	             startingPower maxBotSpeed botRadius botStr ai) aiList in
 	state.roomWidth <- roomWidth;
 	state.roomHeight <- roomHeight;
 	state.maxBotSpeed <- maxBotSpeed;
@@ -82,7 +81,8 @@ let execute bot cmd =
 		let dir = Bot.getDirection bot in
 		let id = Bot.getID bot in
 		let spd = state.bulletSpeed in
-		state.bulletList <- state.bulletList@[Bullet.make pos dir spd bulletpower id];
+		let str = Bot.getStrength bot in 
+		state.bulletList <- state.bulletList@[Bullet.make pos dir spd str id];
 		bot
 	| Forward amt ->
 		Bot.moveForward amt bot

@@ -31,6 +31,9 @@ val getStepFunc : t -> (t -> command)
 (* Gets the radius of the bot *)
 val getRadius : t -> float
 
+(* Gets the strength of the bot *)
+val getStrength : t -> float
+
 (* Sets the Position of the bot *)
 val setPosition : float * float -> t -> t
 
@@ -50,6 +53,7 @@ val make :  (float * float) ->
             (float * float) -> 
             float -> 
             float -> 
+            float ->
             float ->
             (t -> command) -> 
             t

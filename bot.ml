@@ -25,7 +25,8 @@ type t = {
   stepFunc : (t -> command); 
   maxSpeed : float;
   id : int;
-  radius : float
+  radius : float;
+  strength : float
 }
 
 (* id static variable *)
@@ -66,6 +67,10 @@ let getStepFunc bot =
 let getRadius bot = 
   bot.radius
 
+(* Gets the strength of the bot *)
+let getStrength bot = 
+  bot.strength
+
 (* Sets the Position of the bot *)
 let setPosition (x, y) bot = 
   {bot with xPos = x;
@@ -88,7 +93,7 @@ let setPower pwr bot =
 (* Makes a new bot with a given position, direction, power level, and max speed.
  * Also assigns the ai step function to the bot.
  * [make (xPos,yPos) (xVec,yVec) power maxSpeed stepAI] *)
-let make (xPos,yPos) (xVec,yVec) power maxSpeed rad stepAI = {
+let make (xPos,yPos) (xVec,yVec) power maxSpeed rad str stepAI = {
     xPos = xPos;
     yPos = yPos;
     xDir = xVec;
@@ -98,4 +103,5 @@ let make (xPos,yPos) (xVec,yVec) power maxSpeed rad stepAI = {
     stepFunc = stepAI;
     id = makeid ();
     radius = rad;
+    strength = str
 } 
