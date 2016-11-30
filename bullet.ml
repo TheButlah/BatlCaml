@@ -30,7 +30,7 @@ let getPower bullet =
 	bullet.power
 
 (* creates a bullet *)
-let make (x, y) (xd, yd) sp i p = {
+let make (x, y) (xd, yd) sp p i = {
   xPos = x;
   yPos = y;
   xDir = xd;

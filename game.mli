@@ -8,7 +8,7 @@ type t
 val state : t
 
 (* initializes the game state *)
-val init : (Bot.t -> Bot.command) list -> int -> float -> unit
+val init : (Bot.t -> Bot.command) list -> int -> unit
 
 (* steps the game one frame *)
 val step : unit -> unit

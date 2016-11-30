@@ -18,4 +18,4 @@ let botCollision bot1 bot2 =
   let dist = max (Bot.getRadius bot1) (Bot.getRadius bot2) in 
   let diff = (Bot.getID bot1) <> (Bot.getID bot2) in 
   let distbetween = distance (Bot.getPosition bot1) (Bot.getPosition bot2) in 
-  diff && distancebetween < dist
+  diff && distbetween < dist

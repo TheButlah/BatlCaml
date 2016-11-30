@@ -19,6 +19,8 @@ let state = {
 	bulletList = []
 }
 
+let bulletpower = 10.
+
 (* Math helpers *)
 let pi = 3.14159265359
 
@@ -80,7 +82,7 @@ let execute bot cmd =
 		let dir = Bot.getDirection bot in
 		let id = Bot.getID bot in
 		let spd = state.bulletSpeed in
-		state.bulletList <- state.bulletList@[Bullet.make pos dir spd id];
+		state.bulletList <- state.bulletList@[Bullet.make pos dir spd bulletpower id];
 		bot
 	| Forward amt ->
 		Bot.moveForward amt bot
@@ -93,18 +95,18 @@ let step () =
 	state.bulletList <- List.map (fun x -> Bullet.step x) state.bulletList
 
 let handleCollisions () =
-  let rec enemy bot acc = (
+  let rec enemy bot acc = 
     match bot with
     | [] -> acc
     | h1::t1 ->
-      let bottemp = ref bot in
+      let bottemp = ref h1 in
       let rec bulletList bullets acc2 = (
         match bullets with
         | [] -> acc2
         | h2::t2 ->
-          let bulletcol = Collisions.bulletCollision h2 h1
+          let bulletcol = Collisions.bulletCollision h2 h1 in 
           if bulletcol then
-              let _ = bottemp := Bot.setPower (Bot.getPower bot -. Bullet.getPower h2) h1 in
+              let _ = bottemp := Bot.setPower (Bot.getPower !bottemp -. Bullet.getPower h2) !bottemp in
               bulletList t2 acc2@[h2]
           else bulletList t2 acc2
       )
