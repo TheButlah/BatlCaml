@@ -8,4 +8,4 @@ val printInfo : t -> unit
 val outputLog : t -> unit
 
 (* entry point for program *)
-val main : int
+val main : unit -> unit

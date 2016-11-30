@@ -1,9 +1,34 @@
 open Game
+open Bot 
+open Bullet
 
-val loop : int -> Game.t -> Game.t
+(* info for bullets *)
+type bulletInfo = {
+	x : float;
+	y : float;
+	dir : float * float;
+	owner : int
+}
 
-val getState : Game.t -> string
+(* info for bots *)
+type botInfo = {
+	x : float;
+	y : float;
+	dir : float * float;
+	id : int
+}
 
-val setPause : bool -> unit
+(* type returned by the step function *)
+type t = {
+	bulletList : bulletInfo list;
+	botList : botInfo list;
+	finished : bool;
+	width : float;
+	height : float
+}
 
-val isPaused : unit -> bool
+(* initializes a game *)
+val init : unit -> unit
+
+(* steps the game and returns a datastructure that can be used for view *)
+val step : unit -> t
