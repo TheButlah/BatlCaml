@@ -30,7 +30,7 @@ type t = {
 }
 
 (* initializes a game *)
-val init : unit -> unit
+val init : int -> unit
 
 (* steps the game and returns a datastructure that can be used for view *)
 val step : unit -> t

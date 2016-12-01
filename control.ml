@@ -30,18 +30,14 @@ type t = {
 }
 
 (* initializes a game *)
-let init () = 
+let init seed = 
 	let roomWidth = 500.0 in
 	let roomHeight = 500.0 in
 	let maxBotSpeed = 10.0 in
 	let bulletSpeed = 5.0 in
 	let startingPower = 100.0 in
 	let rad = 5.0 in 
-	let spwr = 10.0 in
-	let _ = print_string "Input a seed to generate the game: " in
-	let seedinput = read_line () in
-	let seedrandom = (Sys.time ()) *. 1000000. |> int_of_float in 
-	let seed = if seedinput = "" then seedrandom else seedinput |> int_of_string in 
+	let spwr = 10.0 in 
 	Game.init [Ai.step; Ai.step2] seed roomWidth roomHeight maxBotSpeed bulletSpeed startingPower rad spwr 
 
 (* creates a botinfo record from a bot *)
