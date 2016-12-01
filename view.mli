@@ -2,7 +2,6 @@ open Control
 open Format
 open Array
 open Unix
-open Toploop
 
 (* type of datastructure maintained by the view *)
 type t

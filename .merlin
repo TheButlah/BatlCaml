@@ -1,4 +1,6 @@
 PKG oUnit
 PKG sdl
+PKG ANSITerminal
 
 B _build
+B +threads

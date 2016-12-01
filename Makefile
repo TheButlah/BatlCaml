@@ -2,21 +2,21 @@
 SRCS = bot bullet api ai game view control collisions main
 #SRCS = bot.byte bullet.byte api.byte ai.byte game.byte view.byte control.byte collisions.byte test.byte
 LIBS = dynlink 
-PKGS = compiler-libs.common,oUnit 
+PKGS = oUnit,ANSITerminal
 #PKGS = oUnit,sdl,bigarray,sdl.sdlttf,sdl.sdlimage,sdl.sdlmixer
 #PKGS = oUnit,tsdl
 
 all: $(SRCS)
-	ocamlbuild -pkgs $(PKGS) -libs $(LIBS) test.byte
+	ocamlbuild -tag thread -pkgs $(PKGS) -libs $(LIBS) test.byte
 
 run: main
 	./main.byte
 
 $(SRCS):
-	ocamlbuild -pkgs $(PKGS) -libs $(LIBS) $@.byte
+	ocamlbuild -tag thread -pkgs $(PKGS) -libs $(LIBS) $@.byte
 
 test: 
-	ocamlbuild -pkgs $(PKGS) -libs $(LIBS) && ./test.byte
+	ocamlbuild -tag thread -pkgs $(PKGS) -libs $(LIBS) && ./test.byte
 
 clean:
 	ocamlbuild -clean
