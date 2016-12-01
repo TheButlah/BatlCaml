@@ -45,7 +45,7 @@ let printArray a =
 			then ANSITerminal.print_string [ANSITerminal.on_green] " '"
 			else if a.(i).(j) = 1
 			then ANSITerminal.print_string [ANSITerminal.on_green; ANSITerminal.red] " @"
-			else ANSITerminal.print_string [ANSITerminal.on_green; ANSITerminal.red] " *"
+			else ANSITerminal.print_string [ANSITerminal.on_green; ANSITerminal.blue] " *"
 		done;
 		print_endline ""
 	done;
