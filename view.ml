@@ -98,8 +98,8 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 	) in
 	iter ctrl.botList;
 	iter2 ctrl.bulletList;
-	ANSITerminal.erase ANSITerminal.Above;
-  	ANSITerminal.move_cursor (-x) (-y);
+	(* ANSITerminal.erase ANSITerminal.Above; *)
+  	ANSITerminal.set_cursor 1 1;
 	printArray screen;
 	Thread.delay delay
 
@@ -115,7 +115,7 @@ let main () =
 	let delay = 1. /. (float_of_int speed) in
 	Pervasives.print_string "Enter the number of steps to take as an integer. Enter -1 to simulate until completion: ";
 	let (widthbefore,heightbefore) = ANSITerminal.size () in
-	let (width,height) = (widthbefore/2,heightbefore-5) in 
+	let (width,height) = (widthbefore/2,heightbefore-2) in 
 	let printer = printScreen width height delay in 
 	let count = read_int () in 
 	if count < 0
