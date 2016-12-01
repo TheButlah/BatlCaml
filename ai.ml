@@ -15,6 +15,6 @@ let step you =
 		let _ = turned := true in turnLeft 65.
 
 let step2 you = 
-	wait ()
+	forward 0.5
 
 

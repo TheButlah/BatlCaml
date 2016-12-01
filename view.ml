@@ -42,10 +42,10 @@ let printArray a =
 	for i=0 to size-1 do
 		for j=0 to size2-1 do
 			if a.(i).(j) = 0 
-			then print_string " '"
+			then ANSITerminal.print_string [ANSITerminal.on_green] " '"
 			else if a.(i).(j) = 1
-			then print_string " @"
-			else print_string " *"
+			then ANSITerminal.print_string [ANSITerminal.on_green; ANSITerminal.red] " @"
+			else ANSITerminal.print_string [ANSITerminal.on_green; ANSITerminal.red] " *"
 		done;
 		print_endline ""
 	done;
@@ -99,7 +99,7 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 	iter ctrl.botList;
 	iter2 ctrl.bulletList;
 	ANSITerminal.erase ANSITerminal.Above;
-  ANSITerminal.set_cursor 1 1;
+  	ANSITerminal.move_cursor (-x) (-y);
 	printArray screen;
 	Thread.delay delay
 
