@@ -2,6 +2,7 @@ open Control
 open Format
 open Array
 open Unix
+open Toploop
 
 (* type of datastructure maintained by the view *)
 type t = Control.t
@@ -51,9 +52,16 @@ let printArray a =
 	done;
 	print_string "\n\n"
 
-(* sleep for less than one second *)
-let minisleep (sec: float) =
-    ignore (Unix.select [] [] [] sec)
+(* equivalent of pressing backspace [num] times *)
+let rec backspace (num : int) = 
+	match num with
+	| 0 -> ()
+	| _ -> print_string "\b"; backspace (num-1)
+
+let eval code =
+  let as_buf = Lexing.from_string code in
+  let parsed = !Toploop.parse_toplevel_phrase as_buf in
+  ignore (Toploop.execute_phrase true Format.std_formatter parsed)
 
 (* print out information as dots on a printed grid *)
 let printScreen x y (delay : float) (ctrl : Control.t) = 
@@ -96,8 +104,9 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 	) in
 	iter ctrl.botList;
 	iter2 ctrl.bulletList;
-	minisleep delay;
-	printArray screen
+	eval "backspace (x*y);;";
+	eval "Unix.sleepf delay;;";
+	eval "printArray screen;;"
 
 (* print out the logs *)
 let outputLog t =
