@@ -57,11 +57,6 @@ let rec backspace (num : int) =
 	| 0 -> ()
 	| _ -> print_string "\b"; backspace (num-1)
 
-(*let eval code =
-  let as_buf = Lexing.from_string code in
-  let parsed = !Toploop.parse_toplevel_phrase as_buf in
-  ignore (Toploop.execute_phrase true Format.std_formatter parsed)*)
-
 (* print out information as dots on a printed grid *)
 let printScreen x y (delay : float) (ctrl : Control.t) = 
 	let screen = initWindow x y in 
@@ -103,13 +98,9 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 	) in
 	iter ctrl.botList;
 	iter2 ctrl.bulletList;
-  ANSITerminal.erase ANSITerminal.Screen;
-  printArray screen;
-  Thread.delay delay
-  (*
-	eval "backspace (x*y);;";
-	eval "Unix.sleepf delay;;";
-	eval "printArray screen;;"*)
+	ANSITerminal.erase ANSITerminal.Screen;
+	printArray screen;
+	Thread.delay delay
 
 (* print out the logs *)
 let outputLog t =
@@ -118,12 +109,13 @@ let outputLog t =
 (* entry point for program *)
 let main () =
 	Control.init ();
-  print_string "Enter the number of AI steps per second: ";
-  let speed = read_int () in
-  let delay = 1. /. (float_of_int speed) in
-	print_string("Enter the number of steps to take as an integer. Enter -1 to simulate until completion: ");
-  let (width,height) = ANSITerminal.size () in
-  let printer = printScreen width height delay in 
+	Pervasives.print_string "Enter the number of AI steps per second: ";
+	let speed = read_int () in
+	let delay = 1. /. (float_of_int speed) in
+	Pervasives.print_string "Enter the number of steps to take as an integer. Enter -1 to simulate until completion: ";
+	let (widthbefore,heightbefore) = ANSITerminal.size () in
+	let (width,height) = (widthbefore/2,heightbefore-5) in 
+	let printer = printScreen width height delay in 
 	let count = read_int () in 
 	if count < 0
 	then
