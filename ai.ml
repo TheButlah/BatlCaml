@@ -4,7 +4,7 @@ let turned = ref false
 let shot = ref false
 
 (* RANDO THE MAGNIFICENT *)
-let step2 you = 
+let step you = 
 	let rand = Random.int 4 in
 	if rand = 0 then
 		let enemies = getEnemies you in
@@ -32,3 +32,4 @@ let step2 you =
 	else
 		forward 0.5
 
+let _ = register step

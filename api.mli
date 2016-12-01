@@ -1,9 +1,6 @@
 open Bot
 open Game
-
-module type AI = sig
-  val step : Bot.t -> Bot.command
-end
+open Control
 
 (* enemy type *)
 type enemy = {
@@ -51,3 +48,7 @@ val getRoomSize : unit -> float * float
 
 (* gets the enemies of the game and returns a list of them *)
 val getEnemies : Bot.t -> enemy list
+
+(* registers the step function so it can be recognized by 
+ * the game; must be called at the end of every ai file *)
+val register : (Bot.t -> Bot.command) -> unit

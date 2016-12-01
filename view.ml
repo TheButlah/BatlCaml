@@ -98,7 +98,6 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 	) in
 	iter ctrl.botList;
 	iter2 ctrl.bulletList;
-	(* ANSITerminal.erase ANSITerminal.Above; *)
   	ANSITerminal.set_cursor 1 1;
 	printArray screen;
 	Thread.delay delay
@@ -109,7 +108,11 @@ let outputLog t =
 
 (* entry point for program *)
 let main () =
-	Control.init ();
+	Pervasives.print_string "Input a seed to generate the game: ";
+	let seedinput = read_line () in
+	let seedrandom = (Sys.time ()) *. 1000000. |> int_of_float in 
+	let seed = if seedinput = "" then seedrandom else seedinput |> int_of_string in
+	Control.init seed;
 	Pervasives.print_string "Enter the number of AI steps per second: ";
 	let speed = read_int () in
 	let delay = 1. /. (float_of_int speed) in

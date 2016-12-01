@@ -1,7 +1,6 @@
 open Game
 open Bot 
 open Bullet
-open Ai
 
 (* info for bullets *)
 type bulletInfo = {
@@ -37,10 +36,10 @@ let firstRand = !prevRand
 exception MultipleAIRegisters
 
 (* initializes a game *)
-let init () = 
+let init seed = 
   try
-    Dynlink.allow_only ["Api"];
-    Dynlink.loadfile_private "ai.cmo";
+    Dynlink.prohibit ["Bullet";"Bot";"Collisions";"Test";"Game";"Control";"View";"Main"];
+    Dynlink.loadfile_private "_build/ai.cmo";
     let resultRand = !prevRand in
     prevRand := firstRand;
     for i = 0 to 0 do
@@ -54,11 +53,18 @@ let init () =
 	  let startingPower = 100.0 in
 	  let rad = 5.0 in 
 	  let spwr = 10.0 in
-	  let seed = 10 in 
 	  Game.init !aiList seed roomWidth roomHeight maxBotSpeed bulletSpeed startingPower rad spwr
   with
   | MultipleAIRegisters -> 
     print_endline "An AI was registered more than once! Are you cheating?";
+    exit 1
+  | Dynlink.Error Dynlink.File_not_found str ->
+    print_endline "An AI file could not be found! This likely implies that it did not compile.";
+    print_string "The file in question was: "; print_endline str;
+    exit 1
+  | Dynlink.Error Dynlink.Unavailable_unit str ->
+    print_endline "An AI file tried to access a module that was prohibited! Are you cheating?";
+    print_string "The unit's name was: "; print_endline str;
     exit 1
   | _ -> 
     print_endline "Sorry, one or more of the AIs provided are incorrect!";
