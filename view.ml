@@ -98,7 +98,8 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 	) in
 	iter ctrl.botList;
 	iter2 ctrl.bulletList;
-	ANSITerminal.erase ANSITerminal.Screen;
+	ANSITerminal.erase ANSITerminal.Above;
+  ANSITerminal.set_cursor 1 1;
 	printArray screen;
 	Thread.delay delay
 
