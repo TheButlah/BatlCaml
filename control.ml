@@ -38,8 +38,7 @@ exception MultipleAIRegisters
 (* initializes a game *)
 let init seed = 
   try
-    (* Dynlink.prohibit ["Bullet";"Bot";"Collisions";"Test";"Game";"Control";"View";"Main"]; *)
-    Dynlink.allow_only ["Api";"Random";"Pervasives";"Nativeint";"List";"Int64";"Int32"];
+    Dynlink.prohibit ["Bullet";"Bot";"Collisions";"Test";"Game";"Control";"View";"Main"];
     Dynlink.loadfile_private "_build/ai.cmo";
     let resultRand = !prevRand in
     prevRand := firstRand;

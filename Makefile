@@ -1,5 +1,5 @@
 #Do not put test in the variable below.
-SRCS = bot bullet api ai game view control collisions main
+SRCS = bot bullet api game view control collisions main aiinterface ai
 #SRCS = bot.byte bullet.byte api.byte ai.byte game.byte view.byte control.byte collisions.byte test.byte
 LIBS = dynlink 
 PKGS = oUnit,ANSITerminal
