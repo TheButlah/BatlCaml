@@ -1,13 +1,17 @@
 #Do not put test in the variable below.
-SRCS = bot bullet api game view control collisions main aiinterface ai
+SRCS = bot linker apiexternal bullet api game view control collisions main
 #SRCS = bot.byte bullet.byte api.byte ai.byte game.byte view.byte control.byte collisions.byte test.byte
 LIBS = dynlink 
 PKGS = oUnit,ANSITerminal
+AI = ai ai2
 #PKGS = oUnit,sdl,bigarray,sdl.sdlttf,sdl.sdlimage,sdl.sdlmixer
 #PKGS = oUnit,tsdl
 
-all: $(SRCS)
+all: $(SRCS) $(AI)
 	ocamlbuild -tag thread -pkgs $(PKGS) -libs $(LIBS) test.byte
+
+$(AI):
+	ocamlbuild ai/$@.cmo
 
 run: main
 	./main.byte

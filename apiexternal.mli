@@ -1,8 +1,7 @@
-type bot = Bot.t
-type command = Bot.command
-
-
+type bot = Api.bot
+type command = Api.command
 (* enemy type *)
+
 type enemy = {
 	xPos : float;
 	yPos : float;

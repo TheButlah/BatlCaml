@@ -37,12 +37,11 @@ exception MultipleAIRegisters
 
 (* initializes a game *)
 let init seed = 
+  print_int (List.length !aiList);
   try
-    Dynlink.prohibit ["Bullet";"Bot";"Collisions";"Test";"Game";"Control";"View";"Main"];
-    Dynlink.loadfile_private "_build/ai.cmo";
     let resultRand = !prevRand in
     prevRand := firstRand;
-    for i = 0 to 0 do
+    for i = 0 to 1 do
       prevRand := (Random.init !prevRand; Random.bits ())
     done;
     if resultRand <> !prevRand then raise MultipleAIRegisters else
@@ -57,17 +56,6 @@ let init seed =
   with
   | MultipleAIRegisters -> 
     print_endline "An AI was registered more than once! Are you cheating?";
-    exit 1
-  | Dynlink.Error Dynlink.File_not_found str ->
-    print_endline "An AI file could not be found! This likely implies that it did not compile.";
-    print_string "The file in question was: "; print_endline str;
-    exit 1
-  | Dynlink.Error Dynlink.Unavailable_unit str ->
-    print_endline "An AI file tried to access a module that was prohibited! Are you cheating?";
-    print_string "The unit's name was: "; print_endline str;
-    exit 1
-  | _ -> 
-    print_endline "Sorry, one or more of the AIs provided are incorrect!";
     exit 1
 
 (* creates a botinfo record from a bot *)
@@ -107,6 +95,7 @@ let step () =
 	}
 
 let registerAI aiFunc =
+  print_endline "register contol";
   let rand = (Random.init !prevRand; Random.bits ()) in
   prevRand := rand;
   aiList:= aiFunc::(!aiList)
