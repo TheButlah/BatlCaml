@@ -2,6 +2,9 @@ open Bot
 open Game
 open Control
 
+type bot = Bot.t
+type command = Bot.command
+
 (* enemy type *)
 type enemy = {
 	xPos : float;

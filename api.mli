@@ -1,6 +1,5 @@
-open Bot
-open Game
-open Control
+type bot = Bot.t
+type command = Bot.command
 
 (* enemy type *)
 type enemy = {
@@ -14,41 +13,41 @@ type enemy = {
 }
 
 (* rotates the bot left *)
-val turnLeft : float -> Bot.command
+val turnLeft : float -> command
 
 (* rotates the bot right *)
-val turnRight : float -> Bot.command
+val turnRight : float -> command
 
 (* shoots a bullet *)
-val shoot : unit -> Bot.command
+val shoot : unit -> command
 
 (* moves forward *)
-val forward : float -> Bot.command
+val forward : float -> command
 
 (* does nothing *)
-val wait : unit -> Bot.command
+val wait : unit -> command
 
 (* returns health of self *)
-val getHealth : Bot.t -> float
+val getHealth : bot -> float
 
 (* returns position of self *)
-val getPos : Bot.t -> float * float
+val getPos : bot -> float * float
 
 (* returns direction of self *)
-val getDirection : Bot.t -> float * float
+val getDirection : bot -> float * float
 
 (* returns speed of self *)
-val getSpeed : Bot.t -> float
+val getSpeed : bot -> float
 
 (* returns id of self *)
-val getID : Bot.t -> int 
+val getID : bot -> int 
 
 (* get the (length,width) of room *)
 val getRoomSize : unit -> float * float
 
 (* gets the enemies of the game and returns a list of them *)
-val getEnemies : Bot.t -> enemy list
+val getEnemies : bot -> enemy list
 
 (* registers the step function so it can be recognized by 
  * the game; must be called at the end of every ai file *)
-val register : (Bot.t -> Bot.command) -> unit
+val register : (bot -> command) -> unit
