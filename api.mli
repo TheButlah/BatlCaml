@@ -1,6 +1,10 @@
 open Bot
 open Game
 
+module type AI = sig
+  val step : Bot.t -> Bot.command
+end
+
 (* enemy type *)
 type enemy = {
 	xPos : float;
