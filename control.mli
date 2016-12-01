@@ -28,6 +28,12 @@ type t = {
 	height : float
 }
 
+
+exception MultipleAIRegisters
+val prevRand : int ref
+val firstRand : int
+
+
 (* initializes a game *)
 val init : int -> unit
 
