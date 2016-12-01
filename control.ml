@@ -29,17 +29,40 @@ type t = {
 	height : float
 }
 
+let aiList = ref []
+
+let prevRand = ref (Random.self_init (); Random.bits ())
+let firstRand = !prevRand
+
+exception MultipleAIRegisters
+
 (* initializes a game *)
 let init () = 
-	let roomWidth = 500.0 in
-	let roomHeight = 500.0 in
-	let maxBotSpeed = 10.0 in
-	let bulletSpeed = 5.0 in
-	let startingPower = 100.0 in
-	let rad = 5.0 in 
-	let spwr = 10.0 in
-	let seed = 10 in 
-	Game.init [Ai.step; Ai.step2] seed roomWidth roomHeight maxBotSpeed bulletSpeed startingPower rad spwr 
+  try
+    Dynlink.allow_only ["Api"];
+    Dynlink.loadfile_private "ai.cmo";
+    let resultRand = !prevRand in
+    prevRand := firstRand;
+    for i = 0 to 0 do
+      prevRand := (Random.init !prevRand; Random.bits ())
+    done;
+    if resultRand <> !prevRand then raise MultipleAIRegisters else
+	  let roomWidth = 500.0 in
+	  let roomHeight = 500.0 in
+	  let maxBotSpeed = 10.0 in
+	  let bulletSpeed = 5.0 in
+	  let startingPower = 100.0 in
+	  let rad = 5.0 in 
+	  let spwr = 10.0 in
+	  let seed = 10 in 
+	  Game.init !aiList seed roomWidth roomHeight maxBotSpeed bulletSpeed startingPower rad spwr
+  with
+  | MultipleAIRegisters -> 
+    print_endline "An AI was registered more than once! Are you cheating?";
+    exit 1
+  | _ -> 
+    print_endline "Sorry, one or more of the AIs provided are incorrect!";
+    exit 1
 
 (* creates a botinfo record from a bot *)
 let makeBotInfo bot = 
@@ -77,4 +100,7 @@ let step () =
 		height = height
 	}
 
-	
+let registerAI aiFunc =
+  let rand = (Random.init !prevRand; Random.bits ()) in
+  prevRand := rand;
+  aiList:= aiFunc::(!aiList)
