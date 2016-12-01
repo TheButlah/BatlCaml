@@ -1,7 +1,6 @@
 open Game
 open Bot 
 open Bullet
-open Ai
 
 (* info for bullets *)
 type bulletInfo = {
@@ -31,14 +30,14 @@ type t = {
 
 (* initializes a game *)
 let init seed = 
-	let roomWidth = 500.0 in
-	let roomHeight = 500.0 in
-	let maxBotSpeed = 10.0 in
-	let bulletSpeed = 5.0 in
-	let startingPower = 100.0 in
+	let rmWidth = 500.0 in
+	let rmHeight = 500.0 in
+	let maxBotSpd = 10.0 in
+	let bulletSpd = 5.0 in
+	let startPwr = 100.0 in
 	let rad = 5.0 in 
 	let spwr = 10.0 in 
-	Game.init [Ai.step; Ai.step2] seed roomWidth roomHeight maxBotSpeed bulletSpeed startingPower rad spwr 
+	Game.init [] seed rmWidth rmHeight maxBotSpd bulletSpd startPwr rad spwr 
 
 (* creates a botinfo record from a bot *)
 let makeBotInfo bot = 
@@ -75,5 +74,8 @@ let step () =
 		width = width;
 		height = height
 	}
+
+let registerAI step = 
+	failwith "U"
 
 	

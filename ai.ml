@@ -69,3 +69,6 @@ let step2 you =
 	else
 		forward 0.5
 
+let _ = register step
+let _ = register step2
+

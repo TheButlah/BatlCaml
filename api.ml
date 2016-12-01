@@ -1,10 +1,6 @@
 open Bot
 open Game
-
-module type AI = sig
-  val step : Bot.t -> Bot.command
-end
-
+open Control
 
 (* enemy type *)
 type enemy = {
@@ -85,6 +81,11 @@ let getEnemies bot =
 			then iter t acc 
 			else iter t (acc@[en])
 	in iter (Game.getBots ()) []
+
+(* registers the step function so it can be recognized by 
+ * the game; must be called at the end of every ai file *)
+let register step = 
+	Control.registerAI step
 
 
 
