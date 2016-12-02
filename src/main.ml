@@ -3,7 +3,7 @@ open Control
 
 let _ = Api.wait
 let _ = Game.adjustBotPositions
-let _ = Apiexternal.wait
+let _ = Apiinternal.wait
 
 let main () =
   Linker.link ();

@@ -1,0 +1,35 @@
+OASISFormat: 0.4
+Name:        BatlCaml
+Version:     1.0
+Synopsis:    AI programming game in OCaml
+Authors:     Ryan Butler, Daniel Kim, Jack Solon, Stephen Kim
+License:     MIT
+Plugins:     META (0.4), DevFiles (0.4)
+Library "BatlCamlLib"
+  Path:         src/lib/
+  BuildTools:   ocamlbuild
+  BuildDepends:
+    ANSITerminal,
+    oUnit,
+    dynlink,
+    threads 
+  Modules:      Api
+  InternalModules:
+    Apiinternal,
+    Bot,
+    Bullet,
+    Collisions,
+    Control,
+    Game
+Executable "BatlCaml"
+  Path:         src/
+  BuildTools:   ocamlbuild
+  MainIs:       main.ml
+  BuildDepends: BatlCamlLib
+Test "TestBatlCaml"
+  Command:      test
+Executable test
+  Path:         src/test/
+  BuildTools:   ocamlbuild
+  MainIs:       test.ml
+  BuildDepends: BatlCamlLib

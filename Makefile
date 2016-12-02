@@ -1,27 +1,41 @@
-#Do not put test in the variable below.
-SRCS = bot linker apiexternal bullet api game view control collisions main
-#SRCS = bot.byte bullet.byte api.byte ai.byte game.byte view.byte control.byte collisions.byte test.byte
-LIBS = dynlink 
-PKGS = oUnit,ANSITerminal
-AI = ai ai2
-#PKGS = oUnit,sdl,bigarray,sdl.sdlttf,sdl.sdlimage,sdl.sdlmixer
-#PKGS = oUnit,tsdl
+# OASIS_START
+# DO NOT EDIT (digest: a3c674b4239234cbbe53afe090018954)
 
-all: $(SRCS) $(AI)
-	ocamlbuild -tag thread -pkgs $(PKGS) -libs $(LIBS) test.byte
+SETUP = ocaml setup.ml
 
-$(AI):
-	ocamlbuild ai/$@.cmo
+build: setup.data
+	$(SETUP) -build $(BUILDFLAGS)
 
-run: main
-	./main.byte
+doc: setup.data build
+	$(SETUP) -doc $(DOCFLAGS)
 
-$(SRCS):
-	ocamlbuild -tag thread -pkgs $(PKGS) -libs $(LIBS) $@.byte
+test: setup.data build
+	$(SETUP) -test $(TESTFLAGS)
 
-test: 
-	ocamlbuild -tag thread -pkgs $(PKGS) -libs $(LIBS) && ./test.byte
+all:
+	$(SETUP) -all $(ALLFLAGS)
+
+install: setup.data
+	$(SETUP) -install $(INSTALLFLAGS)
+
+uninstall: setup.data
+	$(SETUP) -uninstall $(UNINSTALLFLAGS)
+
+reinstall: setup.data
+	$(SETUP) -reinstall $(REINSTALLFLAGS)
 
 clean:
-	ocamlbuild -clean
+	$(SETUP) -clean $(CLEANFLAGS)
 
+distclean:
+	$(SETUP) -distclean $(DISTCLEANFLAGS)
+
+setup.data:
+	$(SETUP) -configure $(CONFIGUREFLAGS)
+
+configure:
+	$(SETUP) -configure $(CONFIGUREFLAGS)
+
+.PHONY: build doc test all install uninstall reinstall clean distclean configure
+
+# OASIS_STOP
