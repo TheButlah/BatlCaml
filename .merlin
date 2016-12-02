@@ -2,5 +2,11 @@ PKG oUnit
 PKG sdl
 PKG ANSITerminal
 
-B _build
+S src
+S src/ai
+S src/lib
+
+B _build/src
+B _build/src/ai
+B _build/src/lib
 B +threads

@@ -4,6 +4,8 @@
 *.native
 *.docdir
 
+ai
+
 _build/
 
 setup.data

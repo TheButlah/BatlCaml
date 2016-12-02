@@ -5,8 +5,14 @@ let _ = Api.wait
 let _ = Game.adjustBotPositions
 let _ = Apiinternal.wait
 
+let aiDir = "src/ai/"
+let apiDir = "_build/src/lib/"
+
 let main () =
-  Linker.link ();
+  at_exit (fun _ -> Sys.command ("rm -f "^aiDir^"*.cm* &> /dev/null") |> ignore);
+  Sys.catch_break true;
+ 
+  Linker.link aiDir apiDir;
   print_endline "About to enter view";
   View.main ()
 (*   Sdl.init [`VIDEO];
@@ -14,4 +20,7 @@ let main () =
   Sdltimer.delay 2000;
   Sdl.quit () *)
 
-let _ = main ()
+let _ = try 
+  main ()
+with
+| _ -> exit 1
