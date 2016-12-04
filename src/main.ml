@@ -28,4 +28,4 @@ let _ =
   try 
     main ()
   with
-  | _ -> exit 1
+  | Sys.Break -> exit 1
