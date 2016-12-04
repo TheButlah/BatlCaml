@@ -69,3 +69,49 @@ let step2 you =
 	else
 		forward 0.5
 
+(* let count = ref 0
+
+let step you = 
+	let enemies = getEnemies you in
+	if !count = 0 && List.length enemies > 0 then
+		let e = List.hd enemies in
+		let (x2,y2) = (e.xPos,e.yPos) in
+		let (x1,y1) = getPos you in
+		let (x',y') = ((x2-.x1),(y2-.y1)) in
+		let (x,y) = getDirection you in
+		let dot = (x*.x')+.(y*.y') in
+		let mag1 = sqrt (x**2. +. y**2.) in 
+		let mag2 = sqrt (x'**2. +. y'**2.) in 
+		let operand = dot/.(mag1*.mag2) in
+			if operand > 1. || operand < -1. then
+				turnLeft 45.
+			else
+				let pi = 3.14159265359 in
+				let theta = ((mod_float (acos operand) (2. *. pi))/.(2. *. pi)) *. 360. in
+				count := 1; turnLeft (-1.*.theta)
+	else
+		shoot ()
+
+let count2 = ref 0
+
+let step2 you = 
+	let enemies = getEnemies you in
+	if !count2 = 0 && List.length enemies > 0 then
+		let e = List.hd enemies in
+		let (x2,y2) = (e.xPos,e.yPos) in
+		let (x1,y1) = getPos you in
+		let (x',y') = ((x2-.x1),(y2-.y1)) in
+		let (x,y) = getDirection you in
+		let dot = (x*.x')+.(y*.y') in
+		let mag1 = sqrt (x**2. +. y**2.) in 
+		let mag2 = sqrt (x'**2. +. y'**2.) in 
+		let operand = dot/.(mag1*.mag2) in
+			if operand > 1. || operand < -1. then
+				turnLeft 45.
+			else
+				let pi = 3.14159265359 in
+				let theta = ((mod_float (acos operand) (2. *. pi))/.(2. *. pi)) *. 360. in
+				count2 := 1; turnLeft theta
+	else
+		shoot () *)
+

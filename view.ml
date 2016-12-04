@@ -1,7 +1,8 @@
 open Control
 open Format
 open Array
-(*open Toploop*)
+
+let codelist = ref [] 
 
 (* type of datastructure maintained by the view *)
 type t = Control.t
@@ -35,43 +36,6 @@ let printInfo t =
 let initWindow x y =
 	Array.make_matrix y x 0 
 
-type color = | Black | Red | Green | Yellow | Blue | Magenta | Cyan | White
-
-let setColor (col : color) = 
-	let cmd = (
-		match col with 
-		| Red -> "\033[31m"
-		| Green -> "\033[32m"
-		| Yellow -> "\033[33m"
-		| Blue -> "\033[34m"
-		| Magenta -> "\033[35m"
-		| Cyan -> "\033[36m"
-		| White -> "\033[37m"
-		| _ -> "\033[30m")
-	in Unix.system ("echo -en \"" ^ cmd ^ "\"")
-
-let setBackground (col : color) = 
-	let cmd = (
-		match col with 
-		| Red -> "\033[41m"
-		| Green -> "\033[42m"
-		| Yellow -> "\033[43m"
-		| Blue -> "\033[44m"
-		| Magenta -> "\033[45m"
-		| Cyan -> "\033[46m"
-		| White -> "\033[47m"
-		| _ -> "\033[40m")
-	in Sys.command ("echo -en \"" ^ cmd ^ "\"")
-
-let clearColor () = 
-	Unix.system "echo -en \"\033[0m\""
-
-let setBold () = 
-	Unix.system "echo -en \"\033[1m\""
-
-let printStr str = 
-	Unix.system ("echo \"" ^ str ^ "\"")
-
 (* prints an array based on 1s and 0s *)
 let printArray a = 
 	let size = Array.length a in 
@@ -79,21 +43,22 @@ let printArray a =
 	for i=0 to size-1 do
 		for j=0 to size2-1 do
 			if a.(i).(j) = 0 
-			then let _ = setBackground Black in printStr "  "; clearColor ()
+			then ANSITerminal.print_string [ANSITerminal.on_black] "  "
 			else if a.(i).(j) = (-1)
-			then let _ = setBackground Black in setColor White; printStr " *"; clearColor ()
+			then ANSITerminal.print_string [ANSITerminal.on_black; ANSITerminal.white] " *"
 			else 	
 				let color = (
-					match a.(i).(j) with
-					| x when x = 1 -> Red
-					| x when x = 2 -> Yellow
-					| x when x = 3 -> Cyan
-					| x when x = 4 -> Green
-					| _ -> Black
+					match a.(i).(j)/10 with
+					| x when x = 1 -> ANSITerminal.red
+					| x when x = 2 -> ANSITerminal.yellow
+					| x when x = 3 -> ANSITerminal.cyan
+					| x when x = 4 -> ANSITerminal.green
+					| _ -> ANSITerminal.black
 				) in 
-				setBackground Black; setColor color; printStr " @"; clearColor ()
+				let code = List.nth [" ☾"; " ☂";" ♕";" ♂";" ☾";" ♕";" ♂"; " ☿";" ☗";" ☯"] (a.(i).(j) mod 10) in
+				ANSITerminal.print_string [ANSITerminal.on_black; color] code;
 		done;
-		print_endline ""
+		print_endline "";
 	done
 
 (* equivalent of pressing backspace [num] times *)
@@ -102,12 +67,37 @@ let rec backspace (num : int) =
 	| 0 -> ()
 	| _ -> print_string "\b"; backspace (num-1)
 
+let round x = 
+	x *. 10. |> int_of_float |> float_of_int |> fun x -> x/.10.
+
+let clearTerminal () = 
+	Sys.command "clear"; ANSITerminal.size () |> fun (x, y) -> y |> ANSITerminal.scroll
+
+let printBotInfoScreen color bot = 
+	"BOT" ^ (string_of_int bot.id) ^ "::" |> ANSITerminal.print_string [color];
+	ANSITerminal.print_string [color] " x: ";
+	bot.x |> round |> string_of_float |> ANSITerminal.print_string [ANSITerminal.black];
+	ANSITerminal.print_string [color] " y: ";
+	bot.y |> round |> string_of_float |> ANSITerminal.print_string [ANSITerminal.black];
+	ANSITerminal.print_string [color] " dir: ";
+	let (x, y) = bot.dir in 
+	y/.x |> atan |> fun x -> x*.360./.(2.*.3.14159265359) |> round |> string_of_float |>  ANSITerminal.print_string [ANSITerminal.black];
+	ANSITerminal.print_string [color] " power: ";
+	bot.power |> round |> string_of_float |> ANSITerminal.print_string [ANSITerminal.black]
+
+let rec printBotsScreen color bots = 
+	match bots with 
+	| [] -> ()
+	| h::[] -> printBotInfoScreen color h; ANSITerminal.erase Eol
+	| h::t -> printBotInfoScreen color h; ANSITerminal.erase Eol; ANSITerminal.print_string [] "\n"; printBotsScreen color t 
+
 (* print out information as dots on a printed grid *)
 let printScreen x y (delay : float) (ctrl : Control.t) = 
 	let screen = initWindow x y in 
 	let size = x in 
 	let size2 = y in 
-	let rec iter (bots : Control.botInfo list) = (
+	let _ = if !codelist = [] then codelist := List.map (fun x -> Random.int 10) ctrl.botList else () in 
+	let rec iter (bots : Control.botInfo list) count = (
 		match bots with
 		| [] -> ()
 		| h::t -> 
@@ -122,8 +112,14 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 			let hx' = hx *. ratio |> int_of_float in 
 			let hy' = hy *. ratio2 |> int_of_float in 
 			let maxpwr = ctrl.maxpower in 
-			screen.(hy').(hx') <- h.power/.(maxpwr/.3.) |> int_of_float |> (+) 1;
-			iter t
+(* 			let anglenum = 
+				let (x, y) = h.dir in
+				let angle = (atan2 y x) *. 360./.(2.*.3.14159265359) in
+				if (angle < 0.) then (360.+.angle+.22.5) /. 45. |> int_of_float 
+				else (angle+.22.5) /. 45. |> int_of_float
+			in *)
+			screen.(hy').(hx') <- ((h.power/.(maxpwr/.3.) |> int_of_float)+1)*10 + (List.nth !codelist count);
+			iter t (count+1)
 	) in 
 	let rec iter2 (bullets : Control.bulletInfo list) = (
 		match bullets with
@@ -142,15 +138,13 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 			if screen.(hy').(hx') = 0 then screen.(hy').(hx') <- -1 else ();
 			iter2 t
 	) in
-	iter ctrl.botList;
+	iter ctrl.botList 0;
 	iter2 ctrl.bulletList;
-  	(* ANSITerminal.set_cursor 1 1; *)
-  	(* Sys.command "clear"; *)
-  	(* Sys.command "echo -en \"\033[0;0H\""; *)
-  	Sys.command "clear";
-  	Sys.command "echo -en \"\033[s\"";
-  	Thread.delay delay;
-	printArray screen
+	ANSITerminal.set_cursor 1 1;
+	print_endline "";
+	Unix.sleepf delay;
+	printArray screen;
+	printBotsScreen ANSITerminal.blue ctrl.botList
 
 (* print out the logs *)
 let outputLog t =
@@ -169,25 +163,28 @@ let main () =
 	let delay = 1. /. (float_of_int speed) in
 	Pervasives.print_string "Enter the number of steps to take as an integer. Enter -1 to simulate until completion: ";
 	let (widthbefore,heightbefore) = ANSITerminal.size () in
-	let (width,height) = (widthbefore/2,heightbefore-2) in 
-	let printer = printScreen width height delay in 
+	let (width,height) = (widthbefore/2,heightbefore) in 
+	let printer botlength = printScreen width (height-botlength-1) delay in 
 	let count = read_int () in 
-	if count < 0
-	then
-		let t = ref (step ()) in
-		while not (!t).finished do
-			let _ = t := (step ()) in
-			printer !t;
-		done 
-	else 
-		let t = ref (step ()) in
-		for i = 0 to count do
-			let _ = printer !t in
-			t := (step ());
-		done;
-	Sys.command "clear"; printer !t
-
-
+	let _ = ANSITerminal.erase Screen in 
+	let t = ref (step ()) in
+	let _ = 
+		if count < 0
+		then
+			while not (!t).finished do
+				let _ = t := (step ()) in
+				printer ((!t).botList |> List.length) !t;
+			done
+		else 
+			for i = 0 to count do
+				let _ = t := (step ()) in
+				printer ((!t).botList |> List.length) !t;
+			done
+	in 
+	if (List.length !t.botList) = 1 
+	then ANSITerminal.print_string [ANSITerminal.cyan] " <- WINNER"
+	else ANSITerminal.print_string [ANSITerminal.cyan] "DRAW";
+	print_endline ""; print_string "\n"
 
 
 

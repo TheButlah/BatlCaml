@@ -92,7 +92,7 @@ let execute bot cmd =
 		state.bulletList <- state.bulletList@[Bullet.make pos dir spd str id];
 		bot
 	| Forward amt ->
-		Bot.moveForward amt bot
+		Bot.moveForward (if amt > 1.0 then 1.0 else if amt < 0.0 then 0.0 else amt) bot
 	| Wait ->
 		bot
 
@@ -145,5 +145,5 @@ let step () =
 	handleCollisions ()
 
 let finished () = 
-	List.length state.botList = 1
+	List.length state.botList <= 1
 
