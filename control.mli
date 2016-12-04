@@ -26,7 +26,8 @@ type t = {
 	botList : botInfo list;
 	finished : bool;
 	width : float;
-	height : float
+	height : float;
+	maxpower : float;
 }
 
 (* initializes a game *)

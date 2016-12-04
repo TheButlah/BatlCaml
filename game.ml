@@ -5,6 +5,7 @@ type t = {
 	mutable roomWidth : float;
 	mutable roomHeight : float;
 	mutable maxBotSpeed : float;
+	mutable maxBotPower : float;
 	mutable bulletSpeed : float;
 	mutable botList : Bot.t list;
 	mutable bulletList : Bullet.t list
@@ -14,6 +15,7 @@ let state = {
 	roomWidth = -1.0;
 	roomHeight = -1.0;
 	maxBotSpeed = -1.0;
+	maxBotPower = -1.0;
 	bulletSpeed = -1.0;
 	botList = [];
 	bulletList = []
@@ -28,11 +30,12 @@ let toRad (deg : float) =
 let toDeg (rad : float) =
   ((mod_float rad (2. *. pi))/.(2. *. pi)) *. 360.
 
-let init (aiList :(Bot.t -> Bot.command) list) seed rw rh mbs bs sp br spwr =
+let init (aiList :(Bot.t -> Bot.command) list) seed rw rh mbs mbp bs sp br spwr =
 	Random.init seed; 
 	let roomWidth = rw in
 	let roomHeight = rh in
 	let maxBotSpeed = mbs in
+	let maxBotPower = mbp in 
 	let bulletSpeed = bs in
 	let startingPower = sp in
 	let botRadius = br in 
@@ -47,6 +50,7 @@ let init (aiList :(Bot.t -> Bot.command) list) seed rw rh mbs bs sp br spwr =
 	state.roomWidth <- roomWidth;
 	state.roomHeight <- roomHeight;
 	state.maxBotSpeed <- maxBotSpeed;
+	state.maxBotPower <- maxBotPower;
 	state.bulletSpeed <-bulletSpeed;
 	state.botList <- botList;
 	state.bulletList <- []
@@ -62,6 +66,9 @@ let getWidth () =
 
 let getHeight () =
 	state.roomHeight
+
+let getMaxPower () = 
+	state.maxBotPower
 
 let execute bot cmd =
  	match cmd with

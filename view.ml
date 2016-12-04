@@ -37,15 +37,16 @@ let initWindow x y =
 
 (* prints an array based on 1s and 0s *)
 let printArray a = 
+	let background = ANSITerminal.on_white in 
 	let size = Array.length a in 
 	let size2 = Array.length a.(0) in 
 	for i=0 to size-1 do
 		for j=0 to size2-1 do
 			if a.(i).(j) = 0 
-			then ANSITerminal.print_string [ANSITerminal.on_green] " '"
+			then ANSITerminal.print_string [background] " '"
 			else if a.(i).(j) = 1
-			then ANSITerminal.print_string [ANSITerminal.on_green; ANSITerminal.red] " @"
-			else ANSITerminal.print_string [ANSITerminal.on_green; ANSITerminal.blue] " *"
+			then ANSITerminal.print_string [background; ANSITerminal.red] " @"
+			else ANSITerminal.print_string [background; ANSITerminal.blue] " *"
 		done;
 		print_endline ""
 	done;
