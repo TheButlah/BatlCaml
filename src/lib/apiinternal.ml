@@ -88,7 +88,6 @@ let getEnemies bot =
 (* registers the step function so it can be recognized by 
  * the game; must be called at the end of every ai file *)
 let register step = 
-  print_endline "register api.ml";
   Control.registerAI step
 
 

@@ -30,21 +30,28 @@ type t = {
 
 let aiList = ref []
 
+let numAI = ref 0
+
+let finishedLoadingAI = ref false
+
 let prevRand = ref (Random.self_init (); Random.bits ())
 let firstRand = !prevRand
 
 exception MultipleAIRegisters
+exception NotEnoughAI of int
 
 (* initializes a game *)
 let init seed = 
-  print_int (List.length !aiList);
   try
+    if !numAI <= 1 then raise (NotEnoughAI !numAI) else
     let resultRand = !prevRand in
     prevRand := firstRand;
-    for i = 0 to 1 do
-      prevRand := (Random.init !prevRand; Random.bits ())
+    for i = 1 to !numAI do
+      prevRand := (Random.init !prevRand; Random.bits ());
+      (*print_endline ("in control loop on " ^ (string_of_int i) ^ ", rand is " ^ (string_of_int !prevRand))*)
     done;
     if resultRand <> !prevRand then raise MultipleAIRegisters else
+    finishedLoadingAI := true;
 	  let roomWidth = 500.0 in
 	  let roomHeight = 500.0 in
 	  let maxBotSpeed = 10.0 in
@@ -54,8 +61,14 @@ let init seed =
 	  let spwr = 10.0 in
 	  Game.init !aiList seed roomWidth roomHeight maxBotSpeed bulletSpeed startingPower rad spwr
   with
+  | NotEnoughAI numAI ->
+    print_endline "The program could not detect enough AI.";
+    print_endline "Please ensure that the AI directory has at least 2 AI in it.";
+    print_endline ("Number of AI units detected: " ^ (string_of_int numAI));
+    exit 1
   | MultipleAIRegisters -> 
-    print_endline "An AI was registered more than once! Are you cheating?";
+    print_endline "An AI was registered more than once!";
+    print_endline "Please ensure each AI file has exactly one call to register.";
     exit 1
 
 (* creates a botinfo record from a bot *)
@@ -95,7 +108,8 @@ let step () =
 	}
 
 let registerAI aiFunc =
-  print_endline "register contol";
+  if !finishedLoadingAI then () else
   let rand = (Random.init !prevRand; Random.bits ()) in
+  (*print_endline ("In register AI, rand is " ^ (string_of_int rand));*)
   prevRand := rand;
   aiList:= aiFunc::(!aiList)

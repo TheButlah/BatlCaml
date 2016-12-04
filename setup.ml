@@ -1,8 +1,5 @@
 (* setup.ml generated for the first time by OASIS v0.4.7 *)
 
-try Topdirs.dir_directory (Sys.getenv "OCAML_TOPLEVEL_PATH")
-with Not_found -> ()
-
 (* OASIS_START *)
 (* DO NOT EDIT (digest: a426e2d026defb34183b787d31fbdcff) *)
 (******************************************************************************)

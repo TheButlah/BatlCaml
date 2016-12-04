@@ -29,9 +29,7 @@ type t = {
 }
 
 
-exception MultipleAIRegisters
-val prevRand : int ref
-val firstRand : int
+val numAI : int ref
 
 
 (* initializes a game *)

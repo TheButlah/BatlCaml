@@ -10,9 +10,7 @@ Library "BatlCamlLib"
   BuildTools:   ocamlbuild
   BuildDepends:
     ANSITerminal,
-    oUnit,
-    dynlink,
-    threads 
+    oUnit
   Modules:      Api
   InternalModules:
     Apiinternal,
@@ -25,7 +23,10 @@ Executable "BatlCaml"
   Path:         src/
   BuildTools:   ocamlbuild
   MainIs:       main.ml
-  BuildDepends: BatlCamlLib
+  BuildDepends: 
+    BatlCamlLib,
+    threads,
+    dynlink
 Test "TestBatlCaml"
   Command:      test
 Executable test

@@ -1,14 +1,14 @@
 exception FailedCompile of string
 
-let link aiDir apiDir =
+let link aiDir =
   try
     let aiFiles = 
       Sys.readdir aiDir |> Array.to_list |>
       List.filter (fun file -> Filename.check_suffix file ".ml") in
+    Control.numAI := List.length aiFiles;
     List.iter (fun file -> 
       let result = 
-        Sys.command ("ocamlc -c " ^ apiDir ^ "BatlCamlLib.cma "
-                     ^ aiDir ^ file) in
+        Sys.command ("ocamlfind ocamlc -c -package BatlCamlLib " ^ aiDir ^ file) in
       if result<>0 then raise (FailedCompile file) else ()) aiFiles;
     let compiledFiles = 
       Sys.readdir aiDir |> Array.to_list |>
@@ -17,7 +17,7 @@ let link aiDir apiDir =
     let allFilesCompiled = 
       (=) (mapToFilename aiFiles) (mapToFilename compiledFiles) in
     if allFilesCompiled then 
-      List.iter (fun file -> aiDir ^ file |> Dynlink.loadfile_private) compiledFiles 
+      List.iter (fun file -> aiDir ^ file |> Dynlink.loadfile_private) compiledFiles
     else raise (FailedCompile "")
  with
   | Dynlink.Error Dynlink.File_not_found str ->
