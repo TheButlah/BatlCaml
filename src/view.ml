@@ -55,7 +55,7 @@ let printArray a =
 					| x when x = 4 -> ANSITerminal.green
 					| _ -> ANSITerminal.black
 				) in 
-				let code = List.nth [" ☾"; " ☂";" ♕";" ♂";" ☾";" ♕";" ♂"; " ☿";" ☗";" ☯"] (a.(i).(j) mod 10) in
+				let code = List.nth [" ☂";" ☾";" ♕";" ♂"; " ☿";" ☗";" ☯"] (a.(i).(j) mod 10) in
 				ANSITerminal.print_string [ANSITerminal.on_black; color] code;
 		done;
 		print_endline "";
@@ -70,10 +70,24 @@ let rec backspace (num : int) =
 let round x = 
 	x *. 10. |> int_of_float |> float_of_int |> fun x -> x/.10.
 
-let clearTerminal () = 
-	Sys.command "clear" |> ignore; ANSITerminal.size () |> fun (x, y) -> y |> ANSITerminal.scroll
-
-let printBotInfoScreen color bot = 
+let printBotInfoScreen color bot maxpower = 
+	let formatpower x = 
+		if String.length x = 3 then "["^x^"]" else
+		if String.length x = 2 then "[0"^x^"]" else
+		if String.length x = 1 then "[00"^x^"]" else "[000]"
+	in bot.power |> round |> int_of_float |> string_of_int |> formatpower |> ANSITerminal.print_string [color];
+	let powerstr = ref "" in 
+	let nullstr = ref "" in
+	let powerbarlen = 20 in
+	let count = ref ((powerbarlen |> float_of_int) *. bot.power/.maxpower |> int_of_float) in
+	for i=0 to powerbarlen-1 do 
+		if !count > 0 
+		then let _ = powerstr := !powerstr ^ "❯" in count := !count - 1
+		else nullstr := !nullstr ^ "-"
+	done;
+	ANSITerminal.print_string [color] "[";
+	ANSITerminal.print_string [ANSITerminal.red] !powerstr;
+	!nullstr ^ "] " |> ANSITerminal.print_string [color];
 	"BOT" ^ (string_of_int bot.id) ^ "::" |> ANSITerminal.print_string [color];
 	ANSITerminal.print_string [color] " x: ";
 	bot.x |> round |> string_of_float |> ANSITerminal.print_string [ANSITerminal.black];
@@ -81,22 +95,38 @@ let printBotInfoScreen color bot =
 	bot.y |> round |> string_of_float |> ANSITerminal.print_string [ANSITerminal.black];
 	ANSITerminal.print_string [color] " dir: ";
 	let (x, y) = bot.dir in 
-	y/.x |> atan |> fun x -> x*.360./.(2.*.3.14159265359) |> round |> string_of_float |>  ANSITerminal.print_string [ANSITerminal.black];
-	ANSITerminal.print_string [color] " power: ";
-	bot.power |> round |> string_of_float |> ANSITerminal.print_string [ANSITerminal.black]
-
-let rec printBotsScreen color bots = 
+	y/.x |> atan |> fun x -> x*.360./.(2.*.3.14159265359) |> round |> string_of_float |>  ANSITerminal.print_string [ANSITerminal.black]
+ 
+let rec printBotsScreen color bots maxpower = 
 	match bots with 
 	| [] -> ()
-	| h::[] -> printBotInfoScreen color h; ANSITerminal.erase ANSITerminal.Eol
-	| h::t -> printBotInfoScreen color h; ANSITerminal.erase ANSITerminal.Eol; ANSITerminal.print_string [] "\n"; printBotsScreen color t 
+	| h::[] -> 
+		printBotInfoScreen color h maxpower; 
+		ANSITerminal.erase ANSITerminal.Eol
+	| h::t -> 
+		printBotInfoScreen color h maxpower; 
+		ANSITerminal.erase ANSITerminal.Eol; 
+		ANSITerminal.print_string [] "\n"; 
+		printBotsScreen color t maxpower
 
 (* print out information as dots on a printed grid *)
 let printScreen x y (delay : float) (ctrl : Control.t) = 
 	let screen = initWindow x y in 
 	let size = x in 
 	let size2 = y in 
-	let _ = if !codelist = [] then codelist := List.map (fun x -> Random.int 10) ctrl.botList else () in 
+	let _ = 
+		if !codelist = [] 
+		then
+			let getRandom x = 
+				let i = ref (Random.int 7) in 
+				while List.exists (fun y -> !i=y) !codelist do
+					i := Random.int 7;
+				done;
+				codelist := !codelist@[!i];
+				!i
+			in codelist := List.map getRandom ctrl.botList
+		else () 
+	in 
 	let rec iter (bots : Control.botInfo list) count = (
 		match bots with
 		| [] -> ()
@@ -112,12 +142,6 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 			let hx' = hx *. ratio |> int_of_float in 
 			let hy' = hy *. ratio2 |> int_of_float in 
 			let maxpwr = ctrl.maxPower in 
-(* 			let anglenum = 
-				let (x, y) = h.dir in
-				let angle = (atan2 y x) *. 360./.(2.*.3.14159265359) in
-				if (angle < 0.) then (360.+.angle+.22.5) /. 45. |> int_of_float 
-				else (angle+.22.5) /. 45. |> int_of_float
-			in *)
 			screen.(hy').(hx') <- ((h.power/.(maxpwr/.3.) |> int_of_float)+1)*10 + (List.nth !codelist count);
 			iter t (count+1)
 	) in 
@@ -144,7 +168,7 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 	print_endline "";
 	Unix.sleepf delay;
 	printArray screen;
-	printBotsScreen ANSITerminal.blue ctrl.botList
+	printBotsScreen ANSITerminal.blue ctrl.botList ctrl.maxPower
 
 (* print out the logs *)
 let outputLog t =

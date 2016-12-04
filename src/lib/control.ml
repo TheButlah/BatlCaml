@@ -25,8 +25,8 @@ type t = {
 	botList : botInfo list;
 	finished : bool;
 	width : float;
-  height : float;
-  maxPower : float
+  	height : float;
+  	maxPower : float
 }
 
 let aiList = ref []
@@ -107,8 +107,8 @@ let step () =
 		botList = List.map makeBotInfo botlist;
 		finished = Game.finished ();
 		width = width;
-    height = height;
-    maxPower = power
+    	height = height;
+    	maxPower = power
 	}
 
 let registerAI aiFunc =
@@ -116,4 +116,4 @@ let registerAI aiFunc =
   let rand = (Random.init !prevRand; Random.bits ()) in
   (*print_endline ("In register AI, rand is " ^ (string_of_int rand));*)
   prevRand := rand;
-  aiList:= aiFunc::(!aiList)
+  aiList := aiFunc::(!aiList)
