@@ -30,7 +30,7 @@ type t = {
 }
 
 (* initializes a game *)
-let init () = 
+let init seed = 
 	let roomWidth = 500.0 in
 	let roomHeight = 500.0 in
 	let maxBotSpeed = 10.0 in
