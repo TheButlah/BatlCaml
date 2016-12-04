@@ -29,3 +29,4 @@ let _ =
     main ()
   with
   | Sys.Break -> exit 1
+  | e -> Printexc.to_string e |> print_endline; exit 1

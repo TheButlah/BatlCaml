@@ -4,7 +4,7 @@ open Api
 open Game
 
 let b1 = Bot.make (10.,10.) (1.,0.) 10. 10. 1. 1. (fun _ -> Api.turnLeft 90.)
-let _ = Game.init [(fun _ -> Api.turnLeft 90.)] 1 1. 1. 1. 1. 1. 1. 1.
+let _ = Game.init [(fun _ -> Api.turnLeft 90.)] 1 1. 1. 1. 1. 1. 1. 1. 1.
 let lb = getBots()
 let direc = List.hd lb |> getDirection
 let get_x direc = let (x,y) = direc in x

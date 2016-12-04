@@ -25,7 +25,8 @@ type t = {
 	botList : botInfo list;
 	finished : bool;
 	width : float;
-	height : float
+  height : float;
+  maxPower : float
 }
 
 let aiList = ref []
@@ -57,9 +58,10 @@ let init seed =
 	  let maxBotSpeed = 10.0 in
 	  let bulletSpeed = 5.0 in
 	  let startingPower = 100.0 in
+    let maxPower = 100.0 in
 	  let rad = 5.0 in 
 	  let spwr = 10.0 in
-	  Game.init !aiList seed roomWidth roomHeight maxBotSpeed bulletSpeed startingPower rad spwr
+	  Game.init !aiList seed roomWidth roomHeight maxBotSpeed maxPower bulletSpeed startingPower rad spwr
   with
   | NotEnoughAI numAI ->
     print_endline "The program could not detect enough AI.";
@@ -99,12 +101,14 @@ let step () =
 	let width = Game.getWidth () in 
 	let botlist = Game.getBots () in 
 	let bulletlist = Game.getBullets () in 
+  let power = Game.getMaxPower () in
 	{
 		bulletList = List.map makeBulletInfo bulletlist;
 		botList = List.map makeBotInfo botlist;
 		finished = Game.finished ();
 		width = width;
-		height = height
+    height = height;
+    maxPower = power
 	}
 
 let registerAI aiFunc =
