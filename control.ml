@@ -40,8 +40,7 @@ let init seed =
 	let maxPower = 100.0 in 
 	let rad = 5.0 in 
 	let spwr = 10.0 in
-	let seed = 10 in 
-	Game.init [Ai.step; Ai.step2] seed roomWidth roomHeight maxBotSpeed bulletSpeed maxPower startingPower rad spwr 
+	Game.init [Ai.step; Ai.step2] seed roomWidth roomHeight maxBotSpeed maxPower bulletSpeed startingPower rad spwr 
 
 (* creates a botinfo record from a bot *)
 let makeBotInfo bot = 
