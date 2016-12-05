@@ -7,11 +7,13 @@ type command =
   | Wait
 
 (* math helpers *)
-let pi = 3.14159265358979324
+let pi = 4. *. atan 1.
 
+(* -2pi to 2pi exclusive *)
 let toRad (deg : float) = 
   ((mod_float deg 360.)/.360.) *. 2. *. pi
 
+(* -360 to 360 exclusive *)
 let toDeg (rad : float) = 
   ((mod_float rad (2. *. pi))/.(2. *. pi)) *. 360.
 
