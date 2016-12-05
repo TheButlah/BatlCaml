@@ -88,14 +88,10 @@ let getEnemies bot =
 			let en = makeEnemy h in 
 			if en.id = getID bot
 			then iter t acc 
-			else iter t (acc@[en])
+			else iter t (en::acc)
 	in iter (Game.getBots ()) []
 
 (* registers the step function so it can be recognized by 
  * the game; must be called at the end of every ai file *)
 let register step = 
   Control.registerAI step
-
-
-
-

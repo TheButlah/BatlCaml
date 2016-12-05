@@ -22,11 +22,13 @@ let state = {
 }
 
 (* Math helpers *)
-let pi = 3.14159265359
+let pi = 4. *. atan 1.
 
+(* -2pi to 2pi exclusive *)
 let toRad (deg : float) =
   ((mod_float deg 360.)/.360.) *. 2. *. pi
 
+(* -360 to 360 exclusive *)
 let toDeg (rad : float) =
   ((mod_float rad (2. *. pi))/.(2. *. pi)) *. 360.
 
@@ -74,22 +76,24 @@ let execute bot cmd =
  	match cmd with
 	| LT deg ->
 		let (x1,y1) = Bot.getDirection bot in
-	    let theta' = mod_float ((atan2 y1 x1) +. toRad deg) (2. *. pi) in
-	    let (x2,y2) = (cos theta', sin theta') in
-	    Bot.setDirection (x2,y2) bot
+    let theta' = mod_float ((atan2 y1 x1) +. toRad deg) (2. *. pi) in
+    let (x2,y2) = (cos theta', sin theta') in
+    Bot.setDirection (x2,y2) bot
 	| RT deg ->
-		let deg' = 360. -. (mod_float deg 360.) in
-	    let (x1,y1) = Bot.getDirection bot in
-	    let theta' = mod_float ((atan2 y1 x1) +. toRad deg') (2. *. pi) in
-	    let (x2,y2) = (cos theta',sin theta') in
-	    Bot.setDirection (x2,y2) bot
+  (*let deg' = 360. -. (mod_float deg 360.) in
+    let (x1,y1) = Bot.getDirection bot in
+    let theta' = mod_float ((atan2 y1 x1) +. toRad deg') (2. *. pi) in *)
+    let (x1, y1) = Bot.getDirection bot in
+    let theta' = mod_float ((atan2 y1 x1) -. toRad deg) (2. *. pi) in
+    let (x2,y2) = (cos theta',sin theta') in
+    Bot.setDirection (x2,y2) bot
 	| Shoot ->
 		let pos = Bot.getPosition bot in
 		let dir = Bot.getDirection bot in
 		let id = Bot.getID bot in
 		let spd = state.bulletSpeed in
 		let str = Bot.getShootPower bot in 
-		state.bulletList <- state.bulletList@[Bullet.make pos dir spd str id];
+		state.bulletList <- Bullet.make pos dir spd str id :: state.bulletList;
 		bot
 	| Forward amt ->
 		Bot.moveForward (if amt > 1.0 then 1.0 else if amt < 0.0 then 0.0 else amt) bot
