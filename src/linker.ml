@@ -13,7 +13,7 @@ let link aiDir =
     let compiledFiles = 
       Sys.readdir aiDir |> Array.to_list |>
       List.filter (fun file -> Filename.check_suffix file ".cmo") in
-    let mapToFilename = List.map Filename.chop_extension in
+    let mapToFilename = (fun l -> List.map Filename.chop_extension l |> List.sort compare) in
     let allFilesCompiled = 
       (=) (mapToFilename aiFiles) (mapToFilename compiledFiles) in
     if allFilesCompiled then 
@@ -34,12 +34,14 @@ let link aiDir =
     exit 1
   | FailedCompile file ->
     print_endline "Failed to compile AI file!";
+    print_endline file;
     exit 1
   | Sys_error error ->
     print_endline "Sorry, we encounted an error when trying to read the AI directory.";
     print_endline "Please ensure that the directory exists and is named properly!";
     print_endline error;
     exit 1
-  | _ -> 
+  | e -> 
     print_endline "Sorry, one or more of the AIs provided are incorrect!";
+    Printexc.to_string e |> print_endline;    
     exit 1

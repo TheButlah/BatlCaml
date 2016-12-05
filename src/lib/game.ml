@@ -72,6 +72,9 @@ let init (aiList :(Bot.t -> Bot.command) list) seed rw rh mbs mbp mbe ec err bs 
 let getBullets () =
 	state.bulletList
 
+let getBulletSpeed () =
+  state.bulletSpeed
+
 let getBots () =
 	state.botList
 
