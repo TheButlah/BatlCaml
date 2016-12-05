@@ -1,6 +1,3 @@
-open View
-open Control
-
 (*load each module so that Dynlink doesn't throw an error when linking *)
 let _ = Api.wait
 (*let _ = Game.adjustBotPositions*)
@@ -18,7 +15,8 @@ let main () =
   Sys.catch_break true;
  
   Linker.link aiDir;
-  View.main ()
+  GuiView.main()
+  (*ConsoleView.main ()*)
 (*   Sdl.init [`VIDEO];
   let _ = Sdlvideo.set_video_mode 800 600 [] in
   Sdltimer.delay 2000;
