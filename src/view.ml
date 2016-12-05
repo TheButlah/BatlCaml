@@ -43,7 +43,7 @@ let printArray a =
 	for i=0 to size-1 do
 		for j=0 to size2-1 do
 			if a.(i).(j) = 0 
-			then ANSITerminal.print_string [ANSITerminal.on_black] "  "
+			then ANSITerminal.print_string [ANSITerminal.on_black; ANSITerminal.white] "  "
 			else if a.(i).(j) = (-1)
 			then ANSITerminal.print_string [ANSITerminal.on_black; ANSITerminal.white] " *"
 			else 	
@@ -132,8 +132,10 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 		then
 			let getRandom x = 
 				let i = ref (Random.int 7) in 
-				while List.exists (fun y -> !i=y) !codelist do
+				let count = ref 0 in 
+				while List.exists (fun y -> !i=y) !codelist && !count <> 7 do
 					i := Random.int 7;
+					count := !count+1;
 				done;
 				codelist := !codelist@[!i];
 				!i
@@ -155,7 +157,7 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 			let hx' = hx *. ratio |> int_of_float in 
 			let hy' = size2-1-(hy *. ratio2 |> int_of_float) in 
 			let maxpwr = ctrl.maxPower in 
-			screen.(hy').(hx') <- ((h.power/.(maxpwr/.3.) |> int_of_float)+1)*10 + (List.nth !codelist count);
+			screen.(hy').(hx') <- ((h.power/.(maxpwr/.3.) |> int_of_float)+1)*10 + (List.nth !codelist (count mod 7));
 			iter t (count+1)
 	) in 
 	let rec iter2 (bullets : Control.bulletInfo list) = (
