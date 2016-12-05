@@ -10,6 +10,7 @@ type enemy = {
 	speed : float;
 	power : float;
 	id : int;
+	energy : float
 }
 
 (* rotates the bot left *)
@@ -26,6 +27,9 @@ val forward : float -> command
 
 (* does nothing *)
 val wait : unit -> command
+
+(* returns energy of self *)
+val getEnergy : bot -> float
 
 (* returns health of self *)
 val getHealth : bot -> float

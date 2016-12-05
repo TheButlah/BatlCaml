@@ -51,6 +51,10 @@ let getDirection bot =
 let getMaxSpeed bot =
   bot.maxSpeed
 
+(* Gets energy of the bot *)
+let getEnergy bot = 
+  bot.energy
+
 (* Get the power level of the bot *)
 let getPower bot =
   bot.power
@@ -93,13 +97,14 @@ let setPower pwr bot =
 (* Makes a new bot with a given position, direction, power level, and max speed.
  * Also assigns the ai step function to the bot.
  * [make (xPos,yPos) (xVec,yVec) power maxSpeed stepAI] *)
-let make (xPos,yPos) (xVec,yVec) power maxSpeed rad str stepAI = {
+let make (xPos,yPos) (xVec,yVec) power energy maxSpeed rad str stepAI = {
     xPos = xPos;
     yPos = yPos;
     xDir = xVec;
     yDir = yVec;
     maxSpeed = maxSpeed;
     power = power;
+    energy = energy;
     stepFunc = stepAI;
     id = makeid ();
     radius = rad;

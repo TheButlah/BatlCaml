@@ -14,6 +14,7 @@ type enemy = {
 	speed : float;
 	power : float;
 	id : int;
+	energy : float;
 }
 
 (* rotates the bot left *)
@@ -35,6 +36,10 @@ let forward amt =
 (* does nothing *)
 let wait () = 
 	Wait
+
+(* returns energy of self *)
+let getEnergy bot = 
+	Bot.getEnergy bot
 
 (* returns health of self *)
 let getHealth bot = 
@@ -70,7 +75,8 @@ let makeEnemy bot =
 		yDir = yd;
 		speed = Bot.getMaxSpeed bot;
 		power = Bot.getPower bot;
-		id = Bot.getID bot
+		id = Bot.getID bot;
+		energy = Bot.getEnergy bot
 	}
 
 (* gets the enemies of the game and returns a list of them *)

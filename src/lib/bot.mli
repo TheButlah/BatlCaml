@@ -22,6 +22,9 @@ val getMaxSpeed : t -> float
 (* Get the power level of the bot *)
 val getPower : t -> float
 
+(* Gets energy of the bot *)
+val getEnergy : t -> float
+
 (* Gets id of the bot *)
 val getID : t -> int
 
@@ -53,6 +56,7 @@ val make :  (float * float) ->
             (float * float) -> 
             float -> 
             float -> 
+            float ->
             float ->
             float ->
             (t -> command) -> 
