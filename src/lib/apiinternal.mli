@@ -40,8 +40,11 @@ val getPos : bot -> float * float
 (* returns direction of self *)
 val getDirection : bot -> float * float
 
-(* returns speed of self *)
-val getSpeed : bot -> float
+(* returns maximum speed of self *)
+val getMaxSpeed : bot -> float
+
+(* returns the speed of bullets *)
+val getBulletSpeed : unit -> float
 
 (* returns id of self *)
 val getID : bot -> int 

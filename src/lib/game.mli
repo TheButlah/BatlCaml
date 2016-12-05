@@ -17,6 +17,9 @@ val step : unit -> unit
 (* returns the list of bullets currently in the game *)
 val getBullets : unit -> Bullet.t list
 
+(* returns the speed of bullets *)
+val getBulletSpeed : unit -> float
+
 (* returns the list of bots currently in the game *)
 val getBots : unit -> Bot.t list
 

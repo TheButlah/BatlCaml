@@ -53,9 +53,13 @@ let getPos bot =
 let getDirection bot = 
 	Bot.getDirection bot
 
-(* returns speed of self *)
-let getSpeed bot = 
+(* returns maximum speed of self *)
+let getMaxSpeed bot = 
 	Bot.getMaxSpeed bot
+
+(* return the speed of bullets *)
+let getBulletSpeed () =
+  Game.getBulletSpeed ()
 
 (* returns id of self *)
 let getID bot = 

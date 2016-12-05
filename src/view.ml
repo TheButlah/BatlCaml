@@ -58,7 +58,7 @@ let printArray a =
 				let code = List.nth [" ☂";" ☾";" ♕";" ♂"; " ☿";" ☗";" ☯"] (a.(i).(j) mod 10) in
 				ANSITerminal.print_string [ANSITerminal.on_black; color] code;
 		done;
-		print_endline "";
+    Format.print_newline ()
 	done
 
 (* equivalent of pressing backspace [num] times *)
@@ -180,11 +180,10 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 	iter ctrl.botList 0;
 	iter2 ctrl.bulletList;
 	ANSITerminal.set_cursor 1 1;
-	print_endline "";
-	Unix.sleepf delay;
 	printArray screen;
-	printBotsScreen ANSITerminal.blue ctrl.botList ctrl.maxPower ctrl.maxEnergy
-
+  printBotsScreen ANSITerminal.blue ctrl.botList ctrl.maxPower ctrl.maxEnergy;
+  Format.print_flush ();
+  Unix.sleepf delay	
 (* print out the logs *)
 let outputLog t =
   failwith "Unimplemented"
@@ -202,7 +201,7 @@ let main () =
 	Pervasives.print_string "Enter the number of steps to take as an integer. Enter -1 to simulate until completion: ";
 	let (widthbefore,heightbefore) = ANSITerminal.size () in
 	let (width,height) = (widthbefore/2,heightbefore) in 
-	let printer botlength = printScreen width (height-botlength-1) delay in 
+	let printer botlength = printScreen width (height-botlength-2) delay in 
 	let count = read_int () in 
 	let _ = ANSITerminal.erase ANSITerminal.Screen in 
 	let t = ref (step ()) in
@@ -223,9 +222,3 @@ let main () =
 	then ANSITerminal.print_string [ANSITerminal.cyan] " <- WINNER"
 	else ANSITerminal.print_string [ANSITerminal.cyan] "DRAW";
 	print_endline ""; print_string "\n"
-
-
-
-
-
-
