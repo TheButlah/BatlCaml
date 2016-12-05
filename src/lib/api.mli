@@ -12,28 +12,33 @@ type enemy = {
 	id : int;
 }
 
-(* rotates the bot left *)
+(* [turnLeft amt] rotates the bot left by amt degrees *)
 val turnLeft : float -> command
 
-(* rotates the bot right *)
+(* [turnLeft amt]rotates the bot right by amt degrees *)
 val turnRight : float -> command
 
 (* shoots a bullet *)
 val shoot : unit -> command
 
-(* moves forward *)
+(* moves forward. Requires [amt] of [forward amt] is a float such that
+ * 0.0 <= amt <= 1.0 *)
 val forward : float -> command
 
 (* does nothing *)
 val wait : unit -> command
 
-(* returns health of self *)
+(* returns health of self. [getHealth b] returns a float between 0.0 and 100.0
+ * where 100.0 is the max bot health *)
 val getHealth : bot -> float
 
-(* returns position of self *)
+(* returns position of self where (0.0,0.0) is the bottom left corner of the 
+ * simulation*)
 val getPos : bot -> float * float
 
-(* returns direction of self *)
+(* returns direction of self. [getDirection b] returns a unit vector 
+ * representing direction such that (1,0) points directly towards the right
+ * side of the simulation *)
 val getDirection : bot -> float * float
 
 (* returns speed of self *)
