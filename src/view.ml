@@ -153,7 +153,7 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 			let ratio = sizef /. width in 
 			let ratio2 = sizef2 /. height in 
 			let hx' = hx *. ratio |> int_of_float in 
-			let hy' = hy *. ratio2 |> int_of_float in 
+			let hy' = size2-1-(hy *. ratio2 |> int_of_float) in 
 			let maxpwr = ctrl.maxPower in 
 			screen.(hy').(hx') <- ((h.power/.(maxpwr/.3.) |> int_of_float)+1)*10 + (List.nth !codelist count);
 			iter t (count+1)
@@ -171,7 +171,7 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 			let ratio = sizef /. width in 
 			let ratio2 = sizef2 /. height in 
 			let hx' = hx *. ratio |> int_of_float in 
-			let hy' = hy *. ratio2 |> int_of_float in 
+			let hy' = size2-1-(hy *. ratio2 |> int_of_float) in 
 			if screen.(hy').(hx') = 0 then screen.(hy').(hx') <- -1 else ();
 			iter2 t
 	) in
