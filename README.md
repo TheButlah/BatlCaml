@@ -17,12 +17,10 @@ opam install ANSITerminal oUnit oasis
 
 Once you have ensured that these have installed correctly (you may have to install system packages as well as opam packages!) then you may clone this repo. From the folder that you just cloned, run the following commands:
 
-<code>
-oasis setup -setup-update dynamic
+<pre><code>oasis setup -setup-update dynamic
 ./configure --prefix=$(opam config var prefix)
 make
-make install
-</code>
+make install</code></pre>
 
 Make sure that there were no errors. If so, then you are ready to run BatlCaml! You can invoke the BatlCaml command in your terminal in any directory, but in order for the program to actually run, you will need a folder in your current working directory named ai with at least two .ml files with valid AI units inside each. A few examples are provided in the ai folder that came with this repo, so try it out with those!
 You can quit the game at any time with ctrl-c. Do not use ctrl-z or any other control sequences because at shutdown the game removes all compiled ocaml files from the ai directory for sanitary purposes. If you accidentally do this and BatlCaml complains, dont fret! Simply remove all the *.cmo and *.cmi files from the ai folder and try again.
