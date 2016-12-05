@@ -6,9 +6,12 @@ type t = {
 	mutable roomHeight : float;
 	mutable maxBotSpeed : float;
 	mutable maxBotPower : float;
+	mutable maxBotEnergy : float;
+	mutable energyRestoreRate : float;
 	mutable bulletSpeed : float;
 	mutable botList : Bot.t list;
-	mutable bulletList : Bullet.t list
+	mutable bulletList : Bullet.t list;
+	mutable energyCost : Bot.command -> float;
 }
 
 let state = {
@@ -16,9 +19,12 @@ let state = {
 	roomHeight = -1.0;
 	maxBotSpeed = -1.0;
 	maxBotPower = -1.0;
+	maxBotEnergy = -1.0;
+	energyRestoreRate = 0.0;
 	bulletSpeed = -1.0;
 	botList = [];
-	bulletList = []
+	bulletList = [];
+	energyCost = fun x -> 0.0
 }
 
 (* Math helpers *)
@@ -32,12 +38,15 @@ let toRad (deg : float) =
 let toDeg (rad : float) =
   ((mod_float rad (2. *. pi))/.(2. *. pi)) *. 360.
 
-let init (aiList :(Bot.t -> Bot.command) list) seed rw rh mbs mbp bs sp br spwr =
+let init (aiList :(Bot.t -> Bot.command) list) seed rw rh mbs mbp mbe ec err bs sp br spwr =
 	Random.init seed; 
 	let roomWidth = rw in
 	let roomHeight = rh in
 	let maxBotSpeed = mbs in
 	let maxBotPower = mbp in 
+	let maxBotEnergy = mbe in 
+	let energyCost = ec in 
+	let energyRestoreRate = err in 
 	let bulletSpeed = bs in
 	let startingPower = sp in
 	let botRadius = br in 
@@ -48,12 +57,15 @@ let init (aiList :(Bot.t -> Bot.command) list) seed rw rh mbs mbp bs sp br spwr 
 	    Bot.make (Random.float (roomWidth -. 2.0*.botRadius) +. botRadius,
 	              Random.float (roomHeight -. 2.0*.botRadius) +. botRadius)
 	             (cos randAngle, sin randAngle)
-	             startingPower maxBotSpeed botRadius shootpwr ai) aiList in
+	             startingPower maxBotEnergy maxBotSpeed botRadius shootpwr ai) aiList in
 	state.roomWidth <- roomWidth;
 	state.roomHeight <- roomHeight;
 	state.maxBotSpeed <- maxBotSpeed;
 	state.maxBotPower <- maxBotPower;
-	state.bulletSpeed <-bulletSpeed;
+	state.maxBotEnergy <- maxBotEnergy;
+	state.energyCost <- energyCost;
+	state.energyRestoreRate <- energyRestoreRate;
+	state.bulletSpeed <- bulletSpeed;
 	state.botList <- botList;
 	state.bulletList <- []
 
@@ -72,33 +84,44 @@ let getHeight () =
 let getMaxPower () = 
 	state.maxBotPower
 
+let getMaxEnergy () = 
+	state.maxBotEnergy
+
+let adjustEnergy cmd bot = 
+	Bot.setEnergy (Bot.getEnergy bot -. state.energyCost cmd) bot
+
 let execute bot cmd =
  	match cmd with
 	| LT deg ->
 		let (x1,y1) = Bot.getDirection bot in
-    let theta' = mod_float ((atan2 y1 x1) +. toRad deg) (2. *. pi) in
-    let (x2,y2) = (cos theta', sin theta') in
-    Bot.setDirection (x2,y2) bot
+	    let theta' = mod_float ((atan2 y1 x1) +. toRad deg) (2. *. pi) in
+	    let (x2,y2) = (cos theta', sin theta') in
+	    let bot' = adjustEnergy cmd bot in 
+	    if Bot.getEnergy bot' = 0. then bot else
+	    Bot.setDirection (x2,y2) bot'
 	| RT deg ->
-  (*let deg' = 360. -. (mod_float deg 360.) in
-    let (x1,y1) = Bot.getDirection bot in
-    let theta' = mod_float ((atan2 y1 x1) +. toRad deg') (2. *. pi) in *)
-    let (x1, y1) = Bot.getDirection bot in
-    let theta' = mod_float ((atan2 y1 x1) -. toRad deg) (2. *. pi) in
-    let (x2,y2) = (cos theta',sin theta') in
-    Bot.setDirection (x2,y2) bot
+	    let (x1, y1) = Bot.getDirection bot in
+	    let theta' = mod_float ((atan2 y1 x1) -. toRad deg) (2. *. pi) in
+	    let (x2,y2) = (cos theta',sin theta') in
+	    let bot' = adjustEnergy cmd bot in 
+	    if Bot.getEnergy bot' = 0. then bot else
+	    Bot.setDirection (x2,y2) bot'
 	| Shoot ->
 		let pos = Bot.getPosition bot in
 		let dir = Bot.getDirection bot in
 		let id = Bot.getID bot in
 		let spd = state.bulletSpeed in
 		let str = Bot.getShootPower bot in 
-		state.bulletList <- Bullet.make pos dir spd str id :: state.bulletList;
-		bot
+		let bot' = adjustEnergy cmd bot in 
+    	if Bot.getEnergy bot' = 0. then bot else
+		let _ = state.bulletList <- Bullet.make pos dir spd str id :: state.bulletList
+		in bot'
 	| Forward amt ->
-		Bot.moveForward (if amt > 1.0 then 1.0 else if amt < 0.0 then 0.0 else amt) bot
+		let bot' = adjustEnergy cmd bot in 
+    	if Bot.getEnergy bot' = 0. then bot else
+		Bot.moveForward (if amt > 1.0 then 1.0 else if amt < 0.0 then 0.0 else amt) bot'
 	| Wait ->
-		bot
+		bot |> adjustEnergy cmd
 
 let handleCollisions () =
   let rec enemy bots acc = 
@@ -141,6 +164,13 @@ let adjustBullets () =
 	state.bulletList <- List.filter (fun x -> not (outside w h x)) state.bulletList
 
 let step () =
+	let calcenergy x = 
+		let e' = Bot.getEnergy x +. state.energyRestoreRate in 
+		if e' > state.maxBotEnergy 
+		then Bot.setEnergy state.maxBotEnergy x
+		else Bot.setEnergy e' x
+	in
+	let _ = state.botList <- List.map calcenergy state.botList in
 	let stepbot x = x |> Bot.getStepFunc x |> execute x in
 	state.botList <- List.map stepbot state.botList;
 	state.bulletList <- List.map Bullet.step state.bulletList;

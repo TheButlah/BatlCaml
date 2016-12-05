@@ -70,25 +70,38 @@ let rec backspace (num : int) =
 let round x = 
 	x *. 10. |> int_of_float |> float_of_int |> fun x -> x/.10.
 
-let printBotInfoScreen color bot maxpower = 
-	let formatpower x = 
-		if String.length x = 3 then "["^x^"]" else
-		if String.length x = 2 then "[0"^x^"]" else
-		if String.length x = 1 then "[00"^x^"]" else "[000]"
-	in bot.power |> round |> int_of_float |> string_of_int |> formatpower |> ANSITerminal.print_string [color];
+let printBotInfoScreen color bot maxpower maxenergy = 
+	"BOT" ^ (string_of_int bot.id) ^ "::" |> ANSITerminal.print_string [color];
+	let formatpower descr x = 
+		if String.length x = 3 then "["^descr^x^"]" else
+		if String.length x = 2 then "["^descr^"0"^x^"]" else
+		if String.length x = 1 then "["^descr^"00"^x^"]" else "[000]"
+	in bot.power |> round |> int_of_float |> string_of_int |> formatpower "PWR "|> ANSITerminal.print_string [color];
 	let powerstr = ref "" in 
 	let nullstr = ref "" in
-	let powerbarlen = 20 in
+	let powerbarlen = 30 in
 	let count = ref ((powerbarlen |> float_of_int) *. bot.power/.maxpower |> int_of_float) in
 	for i=0 to powerbarlen-1 do 
 		if !count > 0 
 		then let _ = powerstr := !powerstr ^ "❯" in count := !count - 1
 		else nullstr := !nullstr ^ "-"
 	done;
+	let energystr = ref "" in 
+	let nullenstr = ref "" in
+	let energybarlen = 30 in
+	let count2 = ref ((energybarlen |> float_of_int) *. bot.energy/.maxenergy |> int_of_float) in
+	for i=0 to energybarlen-1 do 
+		if !count2 > 0 
+		then let _ = energystr := !energystr ^ ":" in count2 := !count2 - 1
+		else nullenstr := !nullenstr ^ "-"
+	done;
 	ANSITerminal.print_string [color] "[";
 	ANSITerminal.print_string [ANSITerminal.red] !powerstr;
-	!nullstr ^ "] " |> ANSITerminal.print_string [color];
-	"BOT" ^ (string_of_int bot.id) ^ "::" |> ANSITerminal.print_string [color];
+	!nullstr ^ "]" |> ANSITerminal.print_string [color];
+	bot.energy |> round |> int_of_float |> string_of_int |> formatpower "EN "|> ANSITerminal.print_string [color];
+	ANSITerminal.print_string [color] "[";
+	ANSITerminal.print_string [ANSITerminal.green] !energystr;
+	!nullenstr ^ "] " |> ANSITerminal.print_string [color];
 	ANSITerminal.print_string [color] " x: ";
 	bot.x |> round |> string_of_float |> ANSITerminal.print_string [ANSITerminal.black];
 	ANSITerminal.print_string [color] " y: ";
@@ -97,17 +110,17 @@ let printBotInfoScreen color bot maxpower =
 	let (x, y) = bot.dir in 
 	y/.x |> atan |> fun x -> x*.360./.(2.*.3.14159265359) |> round |> string_of_float |>  ANSITerminal.print_string [ANSITerminal.black]
  
-let rec printBotsScreen color bots maxpower = 
+let rec printBotsScreen color bots maxpower maxenergy = 
 	match bots with 
 	| [] -> ()
 	| h::[] -> 
-		printBotInfoScreen color h maxpower; 
+		printBotInfoScreen color h maxpower maxenergy; 
 		ANSITerminal.erase ANSITerminal.Eol
 	| h::t -> 
-		printBotInfoScreen color h maxpower; 
+		printBotInfoScreen color h maxpower maxenergy; 
 		ANSITerminal.erase ANSITerminal.Eol; 
 		ANSITerminal.print_string [] "\n"; 
-		printBotsScreen color t maxpower
+		printBotsScreen color t maxpower maxenergy
 
 (* print out information as dots on a printed grid *)
 let printScreen x y (delay : float) (ctrl : Control.t) = 
@@ -168,7 +181,7 @@ let printScreen x y (delay : float) (ctrl : Control.t) =
 	print_endline "";
 	Unix.sleepf delay;
 	printArray screen;
-	printBotsScreen ANSITerminal.blue ctrl.botList ctrl.maxPower
+	printBotsScreen ANSITerminal.blue ctrl.botList ctrl.maxPower ctrl.maxEnergy
 
 (* print out the logs *)
 let outputLog t =

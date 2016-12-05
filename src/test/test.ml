@@ -2,8 +2,8 @@ open OUnit2
 open Api
 
 let setupGame () =
-  Game.init [(fun _ -> Api.turnLeft 90.)] 1 1. 1. 1. 1. 1. 1. 1. 1.;
-  Bot.make (10.,10.) (1.,0.) 10. 10. 1. 1. (fun _ -> Api.turnLeft 90.)
+  Game.init [(fun _ -> Api.turnLeft 90.)] 1 1. 1. 1. 1. 1. (fun x -> 0.0) 1. 1. 1. 1. 1.;
+  Bot.make (10.,10.) (1.,0.) 10. 10. 10. 1. 1. (fun _ -> Api.turnLeft 90.)
 
 
 let get_x = fst

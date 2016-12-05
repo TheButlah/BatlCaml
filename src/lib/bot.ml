@@ -24,6 +24,7 @@ type t = {
   xDir : float;
   yDir : float;
   power : float;
+  energy : float;
   stepFunc : (t -> command); 
   maxSpeed : float;
   id : int;
@@ -95,6 +96,10 @@ let moveForward speedPct bot =
 (* Set the power level of the bot *)
 let setPower pwr bot = 
   {bot with power = pwr} 
+
+(* Set the energy level of the bot *)
+let setEnergy en bot = 
+  {bot with energy = (if en < 0. then 0. else en)}
 
 (* Makes a new bot with a given position, direction, power level, and max speed.
  * Also assigns the ai step function to the bot.

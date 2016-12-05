@@ -49,6 +49,9 @@ val moveForward : float -> t -> t
 (* Set the power level of the bot *)
 val setPower : float -> t -> t
 
+(* Set the energy level of the bot *)
+val setEnergy : float -> t -> t
+
 (* Makes a new bot with a given position, direction, power level, and max speed.
  * Also assigns the ai step function to the bot.
  * [make (xPos,yPos) (xVec,yVec) power maxSpeed radius shootPower stepAI] *)

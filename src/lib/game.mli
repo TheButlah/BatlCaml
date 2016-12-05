@@ -9,7 +9,7 @@ val state : t
 
 (* initializes the game state *)
 val init : (Bot.t -> Bot.command) list -> int -> float -> float -> float -> float -> 
-												 float -> float -> float -> float -> unit
+										float -> (Bot.command -> float) -> float -> float -> float -> float -> float -> unit
 
 (* steps the game one frame *)
 val step : unit -> unit
@@ -29,8 +29,14 @@ val getHeight : unit -> float
 (* returns maximum bot power *)
 val getMaxPower : unit -> float
 
+(* returns maximum bot energy *)
+val getMaxEnergy : unit -> float
+
 (* executes a command returned by the step function *)
 val execute : Bot.t -> Bot.command -> Bot.t
+
+(* adjusts energy level according to command *)
+val adjustEnergy : Bot.command -> Bot.t -> Bot.t
 
 (* handles collisions between bots and bullets *)
 val handleCollisions : unit -> unit

@@ -16,6 +16,7 @@ type botInfo = {
 	y : float;
 	dir : float * float;
 	power : float;
+	energy : float;
 	id : int
 }
 
@@ -27,11 +28,10 @@ type t = {
 	width : float;
 	height : float;
 	maxPower : float;
+	maxEnergy : float;
 }
 
-
 val numAI : int ref
-
 
 (* initializes a game *)
 val init : int -> unit

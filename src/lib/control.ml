@@ -16,6 +16,7 @@ type botInfo = {
 	y : float;
 	dir : float * float;
 	power : float;
+	energy : float;
 	id : int
 }
 
@@ -26,7 +27,8 @@ type t = {
 	finished : bool;
 	width : float;
   	height : float;
-  	maxPower : float
+  	maxPower : float;
+  	maxEnergy : float
 }
 
 let aiList = ref []
@@ -48,20 +50,28 @@ let init seed =
     let resultRand = !prevRand in
     prevRand := firstRand;
     for i = 1 to !numAI do
-      prevRand := (Random.init !prevRand; Random.bits ());
-      (*print_endline ("in control loop on " ^ (string_of_int i) ^ ", rand is " ^ (string_of_int !prevRand))*)
+      	prevRand := (Random.init !prevRand; Random.bits ());
     done;
     if resultRand <> !prevRand then raise MultipleAIRegisters else
     finishedLoadingAI := true;
-	  let roomWidth = 500.0 in
-	  let roomHeight = 500.0 in
-	  let maxBotSpeed = 10.0 in
-	  let bulletSpeed = 5.0 in
-	  let startingPower = 100.0 in
-    let maxPower = 100.0 in
-	  let rad = 5.0 in 
-	  let spwr = 10.0 in
-	  Game.init !aiList seed roomWidth roomHeight maxBotSpeed maxPower bulletSpeed startingPower rad spwr
+	  	let roomWidth = 500.0 in
+	  	let roomHeight = 500.0 in
+	  	let maxBotSpeed = 7.0 in
+	  	let bulletSpeed = 10.0 in
+	  	let startingPower = 100.0 in
+    	let maxPower = 100.0 in
+    	let maxEnergy = 100.0 in 
+    	let energyRestoreRate = 1.0 in 
+	  	let rad = 5.0 in 
+	  	let spwr = 5.0 in
+	  	let energyCost (x : Bot.command) =
+	  		match x with
+	  		| RT a | LT a -> 8.*.a/.360.
+	  		| Forward a -> 8.*.a/.maxBotSpeed
+	  		| Shoot -> spwr
+	  		| Wait -> 0.
+	  	in
+	  	Game.init !aiList seed roomWidth roomHeight maxBotSpeed maxPower maxEnergy energyCost energyRestoreRate bulletSpeed startingPower rad spwr
   with
   | NotEnoughAI numAI ->
     print_endline "The program could not detect enough AI.";
@@ -81,6 +91,7 @@ let makeBotInfo bot =
 		y = by;
 		dir = Bot.getDirection bot;
 		power = Bot.getPower bot;
+		energy = Bot.getEnergy bot;
 		id = Bot.getID bot
 	}
 
@@ -101,11 +112,12 @@ let step () =
 	let width = Game.getWidth () in 
 	let botlist = Game.getBots () in 
 	let bulletlist = Game.getBullets () in 
-  let power = Game.getMaxPower () in
+  	let power = Game.getMaxPower () in
 	{
 		bulletList = List.map makeBulletInfo bulletlist;
 		botList = List.map makeBotInfo botlist;
 		finished = Game.finished ();
+		maxEnergy = Game.getMaxEnergy ();
 		width = width;
     	height = height;
     	maxPower = power
