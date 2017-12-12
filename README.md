@@ -11,7 +11,9 @@ This project is inspired by [RoboCode](http://robocode.sourceforge.net/), which 
 First, you will need to ensure that you have [OPAM](https://opam.ocaml.org/), the ocaml package manager installed, and running OCaml 4.03.0. While it is likely that later versions of OCaml will also work, this is the version that was used at the time of development. Additionally, the project has only been tested on Ubuntu 16.10 and 16.04 as well as Mac OSX. Windows is not officially supported, but feel free to try your luck!
 Next, we will need to install some OPAM packages. Run the following:
 
+```
 opam install ANSITerminal oUnit oasis
+```
 
 Once you have ensured that these have installed correctly (you may have to install system packages as well as opam packages!) then you may clone this repo. From the folder that you just cloned, run the following commands:
 
