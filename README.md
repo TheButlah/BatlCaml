@@ -1,14 +1,14 @@
 # BatlCaml - An AI Programming Game
 
-BatlCaml is a game made by programmers, for programmers. It is a "zero-player game" where instead of sentient players, the players are instead entirely controlled by Artificial Intelligences. Test your coding skills against others by battling your AI units! Whereas many games are written in imperative languages, this one has been written entirely in OCaml, a functional language. This offers players a unique take on developing AI, as the paradigmn is a bit different than traditional languages. 
+BatlCaml is a game made by programmers, for programmers. It is a "zero-player game" where instead of sentient players, the players are instead entirely controlled by Artificial Intelligences. Test your coding skills against others by battling your AI units! Whereas many games are written in imperative languages, this one has been written entirely in [OCaml](https://ocaml.org/), a functional language. This offers players a unique take on developing AI, as the paradigmn is a bit different than traditional languages. 
 
 This game was meant to be played with friends! While there are a few simple AI units included, they are there mostly as examples. So invite them to try their hand at it.
 
-This project is inspired by RoboCode, which is written in Java. If you are wanting for inspiration, take a look at some of the crazy robots people have built for that game, and try to implement them in OCaml!
+This project is inspired by [RoboCode](http://robocode.sourceforge.net/), which is written in Java. If you are wanting for inspiration, take a look at some of the crazy robots people have built for that game, and try to implement them in OCaml!
 
 ## Installation
 
-First, you will need to ensure that you have OPAM, the ocaml package manager installed, and running OCaml 4.03.0. While it is likely that later versions of OCaml will also work, this is the version that was used at the time of development. Additionally, the project has only been tested on Ubuntu 16.10 and 16.04 as well as Mac OSX. Windows is not officially supported, but feel free to try your luck!
+First, you will need to ensure that you have [OPAM](https://opam.ocaml.org/), the ocaml package manager installed, and running OCaml 4.03.0. While it is likely that later versions of OCaml will also work, this is the version that was used at the time of development. Additionally, the project has only been tested on Ubuntu 16.10 and 16.04 as well as Mac OSX. Windows is not officially supported, but feel free to try your luck!
 Next, we will need to install some OPAM packages. Run the following:
 
 opam install ANSITerminal oUnit oasis
